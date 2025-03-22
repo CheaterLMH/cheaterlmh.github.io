@@ -1,200 +1,319 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LMHZSZNB - 一个人再也不</title><meta name="author" content="LMH"><meta name="copyright" content="LMH"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="2020-2024">
-<meta property="og:type" content="website">
-<meta property="og:title" content="LMHZSZNB">
-<meta property="og:url" content="http://example.com/index.html">
-<meta property="og:site_name" content="LMHZSZNB">
-<meta property="og:description" content="2020-2024">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/img/1.png">
-<meta property="article:author" content="LMH">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/img/1.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人主页</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        function handleImageError(imgElement) {
+            const sources = imgElement.dataset.sources.split(',');
+            let currentIndex = parseInt(imgElement.dataset.current || 0);
+            
+            if (currentIndex < sources.length - 1) {
+                currentIndex++;
+                imgElement.style.backgroundImage = `url('${sources[currentIndex]}')`;
+                imgElement.dataset.current = currentIndex;
+            } else {
+                imgElement.style.backgroundColor = '#f0f0f0';
+                imgElement.innerHTML = '<p style="color:#999;padding:20px">图片加载失败</p>';
+            }
         }
-        return value
-      }
-    }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!false && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        if (name && globalFn[key][name]) return
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
-  
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
-        }
-      }
-
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
-
-      const theme = saveToLocal.get('theme')
-    
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+    </script>
+</head>
+<body>
+    <!-- 锁屏界面 -->
+    <div class="index-cover" id="lockScreen">
+        <div class="blur-bg"></div>
+        <div class="cover-mask"></div>
         
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-  
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
-  copy: {
-    success: 'Copy Successful',
-    error: 'Copy Failed',
-    noSupport: 'Browser Not Supported'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  dateSuffix: {
-    just: 'Just now',
-    min: 'minutes ago',
-    hour: 'hours ago',
-    day: 'days ago',
-    month: 'months ago'
-  },
-  copyright: undefined,
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
-    buttonText: 'Load More'
-  },
-  isPhotoFigcaption: false,
-  islazyload: false,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'LMHZSZNB',
-  isPost: false,
-  isHome: true,
-  isHighlightShrink: false,
-  isToc: false,
-  postUpdate: '2024-10-20 13:51:32'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
-  restartOnPushState: false
-}
-
-btf.addGlobalFn('pjaxSend', () => {
-  Pace.restart()
-}, 'pace_restart')
-
-</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js/pace.min.js"></script><div id="web_bg" style="background-image: url(/img/bg.png);"></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LMHZSZNB</span></a></span><div id="menus"></div></nav><div id="site-info"><h1 id="site-title">LMHZSZNB</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/10/13/hello-world/" title="Hello World">Hello World</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-10-13T06:51:24.270Z" title="Created 2024-10-13 14:51:24">2024-10-13</time></span></div><div class="content">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;  More info: Writing Run server1$ hexo server  More info: Server Generate static files1$ hexo generate  More info: Generating Deploy to remote sites1$ hexo deploy  More info: Deployment </div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/1.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">LMH</div><div class="author-info-description">2020-2024</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://space.bilibili.com/1398412220?spm_id_from=333.1007.0.0"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">start at 2020.</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/13/hello-world/" title="Hello World">Hello World</a><time datetime="2024-10-13T06:51:24.270Z" title="Created 2024-10-13 14:51:24">2024-10-13</time></div></div></div></div><div class="card-widget card-archives">
-    <div class="item-headline">
-      <i class="fas fa-archive"></i>
-      <span>Archives</span>
-      
+        <!-- 删除iOS风格时间显示 -->
+        <!-- <div class="lock-time">
+            <div class="time" id="currentTime">00:00</div>
+            <div class="date" id="currentDate">星期一, 1月1日</div>
+        </div> -->
+        
+        <div class="cover-content">
+            <h1 class="site-title">LMHZSZNB</h1>
+            <p class="site-subtitle">lmh0376-2021</p>
+        </div>
+        
+        <!-- 修改上滑解锁提示为每日一语 -->
+        <div class="swipe-hint">
+            <div class="daily-quote" id="dailyQuote">加载中...</div>
+        </div>
     </div>
-    <ul class="card-archive-list">
-  
-      <li class="card-archive-list-item">
-        <a class="card-archive-list-link" href="/archives/2024/10/">
-          <span class="card-archive-list-date">October 2024</span>
-          <span class="card-archive-list-count">1</span>
-        </a>
-      </li>
-    </ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">1</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-10-20T05:51:32.620Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By LMH</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
-  init: str => {
-    window.typed = new Typed('#subtitle', Object.assign({
-      strings: str,
-      startDelay: 300,
-      typeSpeed: 150,
-      loop: true,
-      backSpeed: 50,
-    }, null))
-  },
-  run: subtitleType => {
-    if (true) {
-      if (typeof Typed === 'function') {
-        subtitleType()
-      } else {
-        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
-      }
-    } else {
-      subtitleType()
+
+    <!-- 主内容区域 -->
+    <div class="main-content" id="mainContent">
+        <!-- 博客导航栏 -->
+        <div class="blog-navbar">
+            <div class="navbar-container">
+                <h1 class="blog-title">LMH0376</h1>
+                <ul class="blog-menu">
+                    <li><a href="#" class="active">首页</a></li>
+                    <li><a href="#">归档</a></li>
+                    <li><a href="#">分类</a></li>
+                    <li><a href="#about">关于</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 特色区域 - 新增 -->
+        <div class="featured-area">
+            <div class="featured-container">
+                <div class="featured-post">
+                    <div class="featured-image" style="background-image: url('featured.jpg')"></div>
+                    <div class="featured-content">
+                        <h2 class="featured-title">LMHZSZNB</h2>
+                        <p class="featured-excerpt">置顶文本</p>
+                        <a href="#" class="featured-button">阅读文章</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 博客内容区域 - 修改为两栏布局 -->
+        <div class="blog-container">
+            <div class="main-column">
+                <!-- 文章列表标题 -->
+                <div class="section-header">
+                    <h2 class="section-title">最新文章</h2>
+                    <div class="section-divider"></div>
+                </div>
+                
+            <!-- 博客文章列表 -->
+            <div class="blog-posts">
+                <!-- 文章1 -->
+                <div class="blog-post">
+                        <div class="post-thumbnail-container">
+                    <img src="images/post1.jpg" alt="文章缩略图" class="post-thumbnail">
+                        </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-date">2023年10月15日</span>
+                            <span class="post-category">心得体会</span>
+                        </div>
+                            <h2 class="post-title"><a href="posts/post1.html" class="post-link">文章标题</a></h2>
+                            <p class="post-excerpt">这是文章摘要，内容简洁明了地介绍了文章的主要内容，吸引读者点击阅读更多。</p>
+                            <div class="post-footer">
+                        <a href="posts/post1.html" class="read-more">阅读全文</a>
+                                <div class="post-tags">
+                                    <span class="post-tag">标签1</span>
+                                    <span class="post-tag">标签2</span>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                
+                <!-- 文章2 -->
+                <div class="blog-post">
+                        <div class="post-thumbnail-container">
+                    <img src="post2.jpg" alt="文章缩略图" class="post-thumbnail">
+                        </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-date">2023年10月10日</span>
+                            <span class="post-category">技术分享</span>
+                        </div>
+                            <h2 class="post-title"><a href="articles/post2.html" class="post-link">Post2</a></h2>
+                            <p class="post-excerpt">这是文章摘要，内容简洁明了地介绍了文章的主要内容，吸引读者点击阅读更多。这是文章摘要的第二句，用于补充说明。</p>
+                            <div class="post-footer">
+                        <a href="articles/post2.html" class="read-more">阅读全文</a>
+                                <div class="post-tags">
+                                    <span class="post-tag"></span>
+                                    <span class="post-tag"></span>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                
+                <!-- 文章3 -->
+                <div class="blog-post">
+                        <div class="post-thumbnail-container">
+                    <img src="post3.jpg" alt="文章缩略图" class="post-thumbnail">
+                        </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-date">2023年10月5日</span>
+                            <span class="post-category">生活随笔</span>
+                        </div>
+                            <h2 class="post-title"><a href="articles/post3.html" class="post-link">Post3</a></h2>
+                            <p class="post-excerpt">这是文章摘要，内容简洁明了地介绍了文章的主要内容，吸引读者点击阅读更多。这是文章摘要的第二句，用于补充说明。</p>
+                            <div class="post-footer">
+                        <a href="articles/post3.html" class="read-more">阅读全文</a>
+                                <div class="post-tags">
+                                    <span class="post-tag"></span>
+                                    <span class="post-tag"></span>
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+                <!-- 分页导航 - 新增 -->
+                <div class="pagination">
+                    <a href="#" class="page-prev disabled">&laquo; 上一页</a>
+                    <a href="#" class="page-number active">1</a>
+                    <a href="#" class="page-next">下一页 &raquo;</a>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 - 新增 -->
+            <div class="sidebar">
+                <!-- 作者信息卡片 -->
+                <div class="sidebar-card author-card">
+                    <div class="author-avatar" style="background-image: url('avatar.jpg')"></div>
+                    <h3 class="author-name">LMH0376</h3>
+                    <p class="author-bio">热爱生活，热爱编程，喜欢分享自己的经验和想法。这是我的个人博客，记录我的学习和生活。</p>
+                    <div class="author-social">
+                        <a href="https://space.bilibili.com/" class="social-icon" target="_blank" title="访问我的B站">
+                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+                            </svg>
+                            Bilibili
+                        </a>
+                        <a href="https://github.com/" class="social-icon" target="_blank" title="访问我的GitHub">
+                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 简化页脚 - 略微修改 -->
+        <footer class="blog-footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#">首页</a>
+                    <a href="#">归档</a>
+                    <a href="#about">关于</a>
+                    <a href="#">联系我</a>
+                </div>
+                <p class="copyright">© 2021-2025 我的博客. 保留所有权利.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 文章详情页面 -->
+    <div class="article-detail-page">
+        <header>
+            <button id="closeArticle">返回</button>
+            <h2 id="articleTitle">文章详情</h2>
+        </header>
+        <div class="article-detail-content">
+            <div class="post-meta">
+                <span class="post-date" id="articleDate">2023年10月15日</span>
+            </div>
+            <div id="articleContent">
+                <p>加载中...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模糊效果开关 -->
+    <div class="blur-toggle">
+        <span>模糊效果</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="blurToggle" checked>
+            <span class="toggle-slider"></span>
+        </label>
+    </div>
+
+    <!-- 修改返回锁屏按钮 -->
+    <div class="back-to-lock" id="backToLock">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </div>
+
+    <!-- 关于弹窗 -->
+    <div class="about-modal" id="aboutModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>关于我</h2>
+                <button class="close-modal" id="closeAboutModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="about-info">
+                    <h3>LMH0376</h3>
+                    <p class="about-bio">这里是个人简介，可以写一些关于自己的介绍，兴趣爱好，专业领域等信息。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script>
+    // 修改openArticleDetail函数以使用内联内容
+    function useInlineArticle(articlePath, title, thumbnailUrl) {
+        const content = articlesContent[articlePath];
+        if (content) {
+            document.getElementById('articleContent').innerHTML = content;
+            document.getElementById('articleTitle').textContent = title;
+            // 其他逻辑保持不变...
+                    } else {
+            // 处理文章不存在的情况...
+        }
     }
-  }
-}
-btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
-</script><script>function subtitleType () {
-  if (true) {
-    typedJSFn.init(["0376","2020-2024"])
-  } else {
-    document.getElementById("subtitle").textContent = "0376"
-  }
-}
-typedJSFn.run(subtitleType)</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+
+    // 确保页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取所有关于链接和模态框元素
+        const aboutLinks = document.querySelectorAll('a[href="#about"]');
+        const aboutModal = document.getElementById('aboutModal');
+        const closeAboutModal = document.getElementById('closeAboutModal');
+                const mainContent = document.getElementById('mainContent');
+                
+        if (!aboutLinks.length || !aboutModal) {
+            console.error('无法找到关于链接或模态框元素');
+            return;
+        }
+        
+        // 打开关于弹窗的函数
+        function openAboutModal() {
+            console.log('打开关于弹窗');
+            aboutModal.classList.add('active');
+            if (mainContent) mainContent.style.filter = 'blur(5px)';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭关于弹窗的函数
+        function closeModal() {
+            console.log('关闭关于弹窗');
+            aboutModal.classList.remove('active');
+            if (mainContent) mainContent.style.filter = '';
+            document.body.style.overflow = '';
+        }
+        
+        // 为所有关于链接添加点击事件
+        aboutLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                openAboutModal();
+            });
+        });
+        
+        // 关闭按钮事件
+        if (closeAboutModal) {
+            closeAboutModal.addEventListener('click', closeModal);
+        }
+        
+        // 点击背景关闭
+        aboutModal.addEventListener('click', function(e) {
+            if (e.target === aboutModal) {
+                closeModal();
+            }
+        });
+        
+        // 按ESC键关闭
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && aboutModal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+        });
+    </script>
+</body>
+</html>
