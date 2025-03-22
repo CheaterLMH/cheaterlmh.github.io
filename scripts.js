@@ -806,4 +806,20 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('blurDisabled', isBlurDisabled);
         });
     }
+
+    // 在文档加载前预加载关键图片
+    const preloadBackgroundImage = new Image();
+    preloadBackgroundImage.src = '1.png';
+    
+    // 当图片加载完成后应用到背景
+    preloadBackgroundImage.onload = function() {
+        const coverElement = document.querySelector('.index-cover');
+        if (coverElement) {
+            // 使用已加载的图片作为背景
+            coverElement.style.backgroundImage = `url('${preloadBackgroundImage.src}')`;
+            
+            // 添加加载完成的类，可以用于触发动画或其他效果
+            coverElement.classList.add('background-loaded');
+        }
+    };
 }); 

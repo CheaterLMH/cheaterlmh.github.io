@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 预加载图片 -->
+    <link rel="preload" href="1.png" as="image">
+    
+    <!-- 预加载字体 -->
+    <link rel="preload" href="fonts/helvetica-neue-light.ttf" as="font" type="font/ttf" crossorigin>
+    
     <title>我的个人主页</title>
     <link rel="stylesheet" href="styles.css">
     <script>
@@ -91,16 +98,16 @@
                         </div>
                     <div class="post-content">
                         <div class="post-meta">
-                            <span class="post-date">2023年10月15日</span>
-                            <span class="post-category">心得体会</span>
+                            <span class="post-date">2019.0.1</span>
+                            <span class="post-category">General</span>
                         </div>
-                            <h2 class="post-title"><a href="posts/post1.html" class="post-link">文章标题</a></h2>
-                            <p class="post-excerpt">这是文章摘要，内容简洁明了地介绍了文章的主要内容，吸引读者点击阅读更多。</p>
+                            <h2 class="post-title"><a href="posts/post1.html" class="post-link">Post1</a></h2>
+                            <p class="post-excerpt">Read more.</p>
                             <div class="post-footer">
                         <a href="posts/post1.html" class="read-more">阅读全文</a>
                                 <div class="post-tags">
-                                    <span class="post-tag">标签1</span>
-                                    <span class="post-tag">标签2</span>
+                                    <span class="post-tag"></span>
+                                    <span class="post-tag"></span>
                                 </div>
                             </div>
                     </div>
@@ -113,11 +120,11 @@
                         </div>
                     <div class="post-content">
                         <div class="post-meta">
-                            <span class="post-date">2023年10月10日</span>
-                            <span class="post-category">技术分享</span>
+                            <span class="post-date">2020.0.1</span>
+                            <span class="post-category">General</span>
                         </div>
                             <h2 class="post-title"><a href="articles/post2.html" class="post-link">Post2</a></h2>
-                            <p class="post-excerpt">这是文章摘要，内容简洁明了地介绍了文章的主要内容，吸引读者点击阅读更多。这是文章摘要的第二句，用于补充说明。</p>
+                            <p class="post-excerpt">Main Content.</p>
                             <div class="post-footer">
                         <a href="articles/post2.html" class="read-more">阅读全文</a>
                                 <div class="post-tags">
@@ -135,11 +142,11 @@
                         </div>
                     <div class="post-content">
                         <div class="post-meta">
-                            <span class="post-date">2023年10月5日</span>
-                            <span class="post-category">生活随笔</span>
+                            <span class="post-date">2021.0.1</span>
+                            <span class="post-category">General</span>
                         </div>
                             <h2 class="post-title"><a href="articles/post3.html" class="post-link">Post3</a></h2>
-                            <p class="post-excerpt">这是文章摘要，内容简洁明了地介绍了文章的主要内容，吸引读者点击阅读更多。这是文章摘要的第二句，用于补充说明。</p>
+                            <p class="post-excerpt">Start at 2020.</p>
                             <div class="post-footer">
                         <a href="articles/post3.html" class="read-more">阅读全文</a>
                                 <div class="post-tags">
@@ -164,16 +171,16 @@
                 <!-- 作者信息卡片 -->
                 <div class="sidebar-card author-card">
                     <div class="author-avatar" style="background-image: url('avatar.jpg')"></div>
-                    <h3 class="author-name">LMH0376</h3>
-                    <p class="author-bio">热爱生活，热爱编程，喜欢分享自己的经验和想法。这是我的个人博客，记录我的学习和生活。</p>
+                    <h3 class="author-name">LMH#0376</h3>
+                    <p class="author-bio">老铁牛逼666</p>
                     <div class="author-social">
-                        <a href="https://space.bilibili.com/" class="social-icon" target="_blank" title="访问我的B站">
+                        <a href="https://space.bilibili.com/1398412220?spm_id_from=333.337.0.0" class="social-icon" target="_blank" title="访问我的B站">
                             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
                             </svg>
                             Bilibili
                         </a>
-                        <a href="https://github.com/" class="social-icon" target="_blank" title="访问我的GitHub">
+                        <a href="https://github.com/cheaterlmh" class="social-icon" target="_blank" title="访问我的GitHub">
                             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
                             GitHub
                         </a>
@@ -231,13 +238,13 @@
     <div class="about-modal" id="aboutModal">
         <div class="modal-container">
             <div class="modal-header">
-                <h2>关于我</h2>
+                <h2>About</h2>
                 <button class="close-modal" id="closeAboutModal">&times;</button>
             </div>
             <div class="modal-content">
                 <div class="about-info">
-                    <h3>LMH0376</h3>
-                    <p class="about-bio">这里是个人简介，可以写一些关于自己的介绍，兴趣爱好，专业领域等信息。</p>
+                    <h3>LMH#0376</h3>
+                    <p class="about-bio">cheaterlmh.github.io@gmail.com</p>
                 </div>
             </div>
         </div>
