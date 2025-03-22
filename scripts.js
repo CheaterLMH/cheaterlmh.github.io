@@ -777,4 +777,33 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }
     });
+
+    // 修改模糊效果开关的逻辑，默认开启
+    const blurToggleButton = document.getElementById('toggleBlurButton');
+    
+    if (blurToggleButton) {
+        // 检查本地存储中的状态（注意反转逻辑）
+        const blurDisabled = localStorage.getItem('blurDisabled') === 'true';
+        
+        // 如果储存的状态是禁用，则添加no-blur类
+        if (blurDisabled) {
+            document.body.classList.add('no-blur');
+        }
+        
+        // 添加点击事件处理
+        blurToggleButton.addEventListener('click', function() {
+            // 切换body类名
+            document.body.classList.toggle('no-blur');
+            
+            // 添加动画效果
+            this.classList.add('toggling');
+            setTimeout(() => {
+                this.classList.remove('toggling');
+            }, 300);
+            
+            // 保存状态到本地存储
+            const isBlurDisabled = document.body.classList.contains('no-blur');
+            localStorage.setItem('blurDisabled', isBlurDisabled);
+        });
+    }
 }); 

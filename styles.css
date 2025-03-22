@@ -680,8 +680,8 @@ body {
 
 .sidebar-card {
     background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
@@ -699,6 +699,12 @@ body {
 .author-card {
     text-align: center;
     margin-top: 20px; /* 为作者信息卡片添加上边距 */
+    background-color: rgba(255, 255, 255, 0.6); /* 降低不透明度以增强模糊效果 */
+    backdrop-filter: blur(10px); /* 增加模糊半径 */
+    -webkit-backdrop-filter: blur(10px); /* Safari兼容性支持 */
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
 .author-avatar {
@@ -707,8 +713,8 @@ body {
     border-radius: 50%;
     margin: 0 auto 15px;
     background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     border: 3px solid #fff;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
@@ -1497,4 +1503,78 @@ html, body {
     line-height: 1.7;
     color: #555;
     font-weight: 400;
+}
+
+/* 修改模糊效果开关为黑白色主题 */
+.toggle-switch {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 30px;
+    padding: 8px 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    z-index: 99;
+    transition: all 0.3s;
+    user-select: none;
+}
+
+.toggle-switch:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 开关背景 - 默认开启状态（黑色） */
+.toggle-switch-inner {
+    width: 40px;
+    height: 22px;
+    background-color: #333; /* 改为黑色，默认是开启状态 */
+    border-radius: 20px;
+    position: relative;
+    transition: all 0.3s;
+    margin-right: 8px;
+}
+
+.toggle-switch-circle {
+    width: 18px;
+    height: 18px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    left: 20px; /* 默认在右侧（开启状态） */
+    top: 2px;
+    transition: all 0.3s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* 关闭状态 */
+body.no-blur .toggle-switch-inner {
+    background-color: #ccc; /* 改为灰色表示关闭 */
+}
+
+body.no-blur .toggle-switch-circle {
+    left: 2px; /* 移动到左侧（关闭状态） */
+}
+
+.toggle-label {
+    font-size: 0.9rem;
+    color: #444;
+    font-weight: 500;
+}
+
+/* 扩展无模糊模式下的样式覆盖，确保覆盖所有模糊效果 */
+body.no-blur * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.no-blur .index-cover,
+body.no-blur #mainContent,
+body.no-blur .blurBg,
+body.no-blur .blur-bg,
+body.no-blur [class*="blur"],
+body.no-blur [style*="blur"] {
+    filter: none !important;
 } 
