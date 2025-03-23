@@ -822,4 +822,89 @@ document.addEventListener('DOMContentLoaded', function() {
             coverElement.classList.add('background-loaded');
         }
     };
-}); 
+
+    // 为特色区域按钮添加随机打开文章功能
+    const featuredButton = document.querySelector('.featured-button');
+    
+    if (featuredButton) {
+        featuredButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // 只选择前三篇文章（post1, post2, post3）
+            const firstThreePosts = document.querySelectorAll('.blog-post:nth-child(-n+3) .post-title a');
+            
+            if (firstThreePosts.length > 0) {
+                // 随机选择一篇文章
+                const randomIndex = Math.floor(Math.random() * firstThreePosts.length);
+                const randomArticleLink = firstThreePosts[randomIndex];
+                
+                // 模拟点击文章链接，利用现有的事件处理逻辑
+                randomArticleLink.click();
+                
+                // 控制台输出信息
+                console.log(`随机打开文章: ${randomArticleLink.textContent}`);
+            } else {
+                console.warn('没有找到前三篇文章');
+            }
+        });
+    }
+});
+
+// 根据现有代码判断文章打开函数可能是这样的
+// 如果您的实际函数名或参数不同，请相应调整
+function openArticle(id, title) {
+    // 获取文章详情页元素
+    const articleDetailPage = document.querySelector('.article-detail-page');
+    const articleTitle = document.querySelector('.article-detail-page header h2');
+    const articleContent = document.querySelector('.article-detail-content');
+    
+    if (articleDetailPage && articleTitle && articleContent) {
+        // 设置文章标题
+        articleTitle.textContent = title;
+        
+        // 显示加载状态
+        articleContent.innerHTML = '<div class="loading-text">正在加载文章内容...</div>';
+        
+        // 添加文章开启状态类
+        document.body.classList.add('article-open');
+        
+        // 设置文章详情页为可见
+        articleDetailPage.style.right = '0';
+        
+        // 这里假设您有一个加载文章内容的函数
+        // 如果实际情况不同，请相应调整
+        loadArticleContent(id)
+            .then(content => {
+                articleContent.innerHTML = content;
+            })
+            .catch(error => {
+                articleContent.innerHTML = `
+                    <div class="error-message">
+                        <h3>加载失败</h3>
+                        <p>无法加载文章内容，请稍后再试。</p>
+                        <p>错误信息: ${error.message}</p>
+                    </div>
+                `;
+            });
+    }
+}
+
+// 加载文章内容的函数（根据您的实际实现调整）
+function loadArticleContent(id) {
+    // 这里应该是您实际获取文章内容的逻辑
+    // 例如，从服务器获取或从本地数据加载
+    return new Promise((resolve, reject) => {
+        // 模拟加载延迟
+        setTimeout(() => {
+            // 如果有现成的文章内容加载方法，应该调用它
+            // 这里仅作为示例
+            const content = `
+                <h1>随机文章 #${id}</h1>
+                <p>这是随机选择的文章内容。在实际应用中，您应该替换为真实内容。</p>
+                <p>本文内容丰富多彩，包含了许多有趣的主题和精彩的观点。</p>
+                <p>希望您喜欢这篇随机选择的文章!</p>
+            `;
+            resolve(content);
+        }, 800);
+    });
+} 

@@ -12,6 +12,22 @@
     
     <title>我的个人主页</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- 添加字体定义和文章详情样式 -->
+    <style>
+        @font-face {
+            font-family: 'Helvetica Neue Light';
+            src: url('fonts/helvetica-neue-light.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        .article-detail-content,
+        #articleContent,
+        #articleContent p {
+            font-family: 'Helvetica Neue Light', sans-serif;
+        }
+    </style>
     <script>
         function handleImageError(imgElement) {
             const sources = imgElement.dataset.sources.split(',');
@@ -33,13 +49,6 @@
     <div class="index-cover" id="lockScreen">
         <div class="blur-bg"></div>
         <div class="cover-mask"></div>
-        
-        <!-- 删除iOS风格时间显示 -->
-        <!-- <div class="lock-time">
-            <div class="time" id="currentTime">00:00</div>
-            <div class="date" id="currentDate">星期一, 1月1日</div>
-        </div> -->
-        
         <div class="cover-content">
             <h1 class="site-title">LMHZSZNB</h1>
             <p class="site-subtitle">lmh0376-2021</p>
@@ -70,7 +79,7 @@
         <div class="featured-area">
             <div class="featured-container">
                 <div class="featured-post">
-                    <div class="featured-image" style="background-image: url('featured.jpg')"></div>
+                    <div class="featured-image" style="background-image: url('../images/fabg1.png')"></div>
                     <div class="featured-content">
                         <h2 class="featured-title">LMHZSZNB</h2>
                         <p class="featured-excerpt">置顶文本</p>
