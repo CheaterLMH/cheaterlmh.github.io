@@ -529,7 +529,7 @@ h1, h2, h3, h4, h5, h6 {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .blog-post:hover {
@@ -556,8 +556,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .post-content {
-    padding: 20px 25px 20px 35px;
-    flex: 1;
+    padding-left: 25px;
+    padding-bottom: 25px;
+    padding-top: 15px;
+    padding-right: 25px;
+    box-sizing: border-box;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
@@ -565,7 +569,7 @@ h1, h2, h3, h4, h5, h6 {
 .post-meta {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-size: 0.85rem;
     color: #666;
 }
@@ -595,7 +599,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .post-title {
-    margin: 0 0 10px 0;
+    margin-top: 0;
+    margin-bottom: 10px;
     font-size: 1.3rem;
     line-height: 1.3;
 }
@@ -611,23 +616,26 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .post-excerpt {
-    margin-bottom: 6px;
+    margin-top: 0;
+    margin-bottom: 15px;
     line-height: 1.4;
-    flex: 1;
+    flex-grow: 1;
 }
 
 /* 阅读更多按钮样式改进 - 添加与博客菜单相同但更细的悬停效果 */
 .read-more {
+    margin: 0;
     display: inline-block;
     text-decoration: none;
     color: #555;
     font-weight: 500;
     position: relative;
-    padding: 4px 12px;
+    padding: 8px 15px;
     transition: color 0.3s;
     border-bottom: none !important; /* 移除当前的下划线 */
     align-self: flex-end;
-    margin-top: 12px;
+    background-color: #fafafa00;
+    border-radius: 0px;
 }
 
 .read-more:hover {
@@ -691,145 +699,96 @@ h1, h2, h3, h4, h5, h6 {
 
 /* 侧边栏样式 - 调整上边距以对齐文章卡片 */
 .sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    margin-top: 130px; /* 增加上边距，使侧边栏内容下移对齐文章卡片 */
+    width: 360px; /* 侧边栏宽度 */
+    padding-left: 30px; /* 与主内容区域的间距 */
+    padding-top: 30px; /* 增加顶部内边距以下移整个侧边栏 */
+    color: #333; /* 侧边栏文字颜色 */
 }
 
 /* 重新设计侧边栏卡片，确保高斯模糊效果 */
 .sidebar-card {
-    position: relative;
+    background-color: rgba(255, 255, 255, 0.8); /* 使用与文章卡片相同的半透明背景 */
+    backdrop-filter: blur(10px); /* 添加模糊效果 */
+    -webkit-backdrop-filter: blur(10px);
     border-radius: var(--g3-radius-md);
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05); /* 稍微调整阴影 */
 }
 
-/* 创建专用高斯模糊背景层 */
-.sidebar-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    z-index: -1;
-}
-
-/* 添加半透明边框增强视觉效果 */
-.sidebar-card::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: var(--g3-radius-md);
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* 确保卡片内容在背景层之上 */
-.sidebar-card > * {
-    position: relative;
-    z-index: 1;
-}
-
-/* 作者卡片专用样式 */
+/* 作者信息卡片 - 修改为 Flex 布局 */
 .author-card {
-    text-align: center;
+    display: flex;
+    align-items: flex-start; /* 顶部对齐 */
+    gap: 20px; /* 头像和右侧内容的间距 */
+    padding: 35px; /* 可以适当调整内边距 */
+    margin-top: 60px; /* 增加上边距以下移卡片 */
 }
 
 .author-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: var(--g3-radius-full);
-    margin: 0 auto 20px;
-    border: 3px solid #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 80px; /* 固定头像宽度 */
+    height: 80px; /* 固定头像高度 */
+    border-radius: 50%; /* 圆形头像 */
     background-size: cover;
     background-position: center;
-    position: relative;
-    z-index: 2;
+    flex-shrink: 0; /* 防止头像被压缩 */
+    border: 0 solid rgba(255, 255, 255, 0); /* 可选：添加白色边框 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.034); /* 可选：添加轻微阴影 */
+}
+
+/* 新增: 右侧内容容器 */
+.author-details {
+    display: flex;
+    flex-direction: column; /* 内部元素垂直排列 */
+    flex-grow: 1; /* 占据剩余空间 */
+    min-width: 0; /* 防止内容溢出时撑开容器 */
 }
 
 .author-name {
-    font-size: 1.4rem;
-    font-weight: 500;
-    margin-bottom: 12px;
-    color: #333;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 5px; /* 姓名和简介的间距 */
+    color: #222; /* 姓名颜色加深 */
+    margin-top: 0; /* 移除可能的默认上边距 */
 }
 
 .author-bio {
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    color: #555; /* 简介颜色 */
+    margin-bottom: 10px; /* 简介和社交链接的间距 */
+    line-height: 1.4;
 }
 
-/* 社交媒体图标样式 */
 .author-social {
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
+    /* 移除 flex-wrap: wrap; 或设置为 nowrap，强制水平排列 */
+    /* flex-wrap: wrap; */ /* 移除此行或注释掉 */
+    flex-wrap: nowrap; /* 或者明确设置为 nowrap */
+    gap: 10px; /* 社交图标之间的间距 */
+    margin-top: auto; /* 将社交链接推到底部（如果希望） */
+    overflow-x: auto; /* 如果图标过多导致溢出，允许水平滚动 (可选) */
 }
 
 .social-icon {
-    display: flex;
+    display: inline-flex; /* 使用 flex 布局让图标和文字对齐 */
     align-items: center;
-    padding: 8px 12px;
-    border-radius: var(--g3-radius-full);
-    background-color: rgba(0, 0, 0, 0.05);
-    color: #555;
+    gap: 5px; /* 图标和文字的间距 */
+    color: #444;
     text-decoration: none;
-    font-size: 0.9rem;
-    transition: all 0.3s;
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
+}
+
+.social-icon svg {
+    /* 可以调整图标大小 */
+    width: 16px;
+    height: 16px;
+    stroke-width: 1.8; /* 可以调整描边粗细 */
 }
 
 .social-icon:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+    color: var(--g3-color-primary, #000000); /* 使用主题色或默认蓝色 */
 }
-
-/* 同样应用到分类和标签卡片 */
-.categories-card,
-.tags-card {
-    position: relative;
-    padding: 30px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.categories-card:before,
-.tags-card:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    z-index: -1;
-}
-
-.categories-card > *,
-.tags-card > * {
-    position: relative;
-    z-index: 1;
-}
-
 /* 页脚改进 */
 .blog-footer {
     background-color: rgba(255, 255, 255, 0.8);
@@ -951,6 +910,7 @@ h1, h2, h3, h4, h5, h6 {
     overflow-y: auto;
     box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
     font-family: 'ZhCnAdfyh', 'Microsoft YaHei', sans-serif;
+    position: relative;  /* 确保其子元素绝对定位依据 */
 }
 
 /* 添加自定义中文字体 */
@@ -962,19 +922,20 @@ h1, h2, h3, h4, h5, h6 {
     font-display: swap; /* 优化字体加载体验 */
 }
 
-/* 将自定义字体应用到文章详情内容 */
+/* 文章详情页内容居中对齐调整 - 应用黄金分割比例 */
 .article-detail-content {
-    font-family: 'ZhCnAdfyh', 'Microsoft YaHei', sans-serif;
     background-color: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     padding: 40px;
     max-width: 1200px;
     width: 85%;
-    margin: 30px auto;
+    /* 修改 margin 实现左移，模拟黄金分割 */
+    margin: 30px auto 30px 8%; /* 将左边距设为固定百分比，右边距自动调整 */
     border-radius: var(--g3-radius-lg);
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
     color: #000;
+    font-family: 'ZhCnAdfyh', 'Microsoft YaHei', sans-serif !important; /* 确保字体应用 */
 }
 
 /* 确保文章详情中的所有文本元素使用自定义字体 */
@@ -986,7 +947,17 @@ h1, h2, h3, h4, h5, h6 {
 .article-detail-content h6,
 .article-detail-content p,
 .article-detail-content li,
-.article-detail-content blockquote {
+.article-detail-content blockquote,
+.article-detail-content span,
+.article-detail-content a,
+.article-detail-content small,
+.article-detail-content strong,
+.article-detail-content em,
+.article-detail-content code,
+.article-detail-content pre,
+.article-detail-content table,
+.article-detail-content th,
+.article-detail-content td {
     font-family: 'ZhCnAdfyh', 'Microsoft YaHei', sans-serif !important;
 }
 
@@ -1541,7 +1512,7 @@ html, body {
     -webkit-backdrop-filter: blur(10px);
     border-radius: var(--g3-radius-xl);
     width: 90%;
-    max-width: 400px;
+    max-width: 600px;
     padding: 30px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
     transform: translateY(120vh);
@@ -1560,7 +1531,7 @@ html, body {
     justify-content: space-between;
     align-items: center;
     border-bottom: none;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding-bottom: 0;
 }
 
@@ -1702,10 +1673,20 @@ body.no-blur [style*="blur"] {
 }
 
 /* 响应式调整 */
+@media (max-width: 1024px) {
+    .article-detail-content {
+        width: 90%;
+        margin-left: 5%; /* 在中等屏幕上调整左边距 */
+        margin-right: auto;
+    }
+}
+
 @media (max-width: 768px) {
     .article-detail-content {
         width: 90%;
         padding: 30px;
+        margin-left: 5%; /* 在较小屏幕上保持左边距 */
+        margin-right: auto;
     }
 }
 
@@ -1713,5 +1694,920 @@ body.no-blur [style*="blur"] {
     .article-detail-content {
         width: 92%;
         padding: 25px;
+        margin-left: 4%; /* 在移动设备上微调左边距 */
+        margin-right: auto;
     }
+}
+
+/* 修改文章详情页右侧目录样式，使其背景与内容区一致 */
+.article-toc {
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    width: 20%;
+    max-height: 80%;
+    overflow-y: auto;
+    /* 应用与 .article-detail-content 相同的背景和模糊效果 */
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 15px; /* 稍微调整内边距 */
+    border-radius: var(--g3-radius-lg); /* 使用与内容区相同的圆角 */
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); /* 使用与内容区相同的阴影 */
+}
+
+.article-toc h3 {
+    font-size: 1.1rem; /* 调整标题大小 */
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+    font-weight: 500; /* 调整字重 */
+}
+
+.article-toc ul#tocList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.article-toc ul#tocList li {
+    margin-bottom: 12px;
+    padding-left: 0;
+}
+
+/* --- 重新添加并修改：根据级别调整字体粗细和大小 --- */
+/* H1 级别链接 */
+.article-toc ul#tocList li.toc-level-1 a {
+    font-weight: 600; /* 最粗 */
+    font-size: 1.0rem; /* 稍大 */
+}
+
+/* H2 级别链接 */
+.article-toc ul#tocList li.toc-level-2 a {
+    font-weight: 500; /* 次粗 */
+    font-size: 0.95rem; /* 略大 */
+}
+
+/* H3 级别链接 */
+.article-toc ul#tocList li.toc-level-3 a {
+    font-weight: 400; /* 正常 */
+    font-size: 0.9rem;  /* 基准大小 */
+}
+
+/* H4 级别链接 */
+.article-toc ul#tocList li.toc-level-4 a {
+    font-weight: 400; /* 正常 */
+    font-size: 0.85rem; /* 稍小 */
+}
+
+/* H5 级别链接 */
+.article-toc ul#tocList li.toc-level-5 a {
+    font-weight: 400; /* 正常 */
+    font-size: 0.8rem;  /* 更小 */
+}
+
+/* H6 级别链接 */
+.article-toc ul#tocList li.toc-level-6 a {
+    font-weight: 400; /* 正常 */
+    font-size: 0.8rem;  /* 最小 */
+}
+/* --- 结束：修改字体样式 --- */
+
+/* 调整 a 标签通用样式 - 移除 text-align，padding 只控制垂直 */
+.article-toc ul#tocList li a {
+    position: relative;
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease; /* 移除字重和大小过渡，因为它们在 span 上 */
+    display: block; /* 让 a 充满 li，方便点击 */
+    padding: 4px 0; /* 移除左右 padding，只保留上下 */
+    overflow: visible; /* 允许内部 span 的伪元素显示 */
+    text-align: center; /* 让内部的 inline-block span 居中 */
+    /* 移除 font-size 和 font-weight，移到 span 或级别规则 */
+}
+
+/* --- 修改：为内部 span 添加样式 --- */
+.article-toc ul#tocList li a span {
+    display: inline-block; /* 使 span 包裹文本内容 */
+    position: relative; /* 为 ::after 定位提供上下文 */
+    padding: 0 2px; /* 可选：给文字左右留一点呼吸空间 */
+    /* 默认字体大小和粗细可以在这里设置，或由下面级别规则覆盖 */
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: font-weight 0.3s ease, font-size 0.3s ease; /* 过渡效果放在 span 上 */
+}
+/* --- 结束：修改 span 样式 --- */
+
+
+/* --- 修改：根据级别调整 span 的字体粗细和大小 --- */
+/* H1 级别链接的 span */
+.article-toc ul#tocList li.toc-level-1 a span {
+    font-weight: 600;
+    font-size: 1.0rem;
+}
+
+/* H2 级别链接的 span */
+.article-toc ul#tocList li.toc-level-2 a span {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* H3 级别链接的 span */
+.article-toc ul#tocList li.toc-level-3 a span {
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+/* H4 级别链接的 span */
+.article-toc ul#tocList li.toc-level-4 a span {
+    font-weight: 400;
+    font-size: 0.85rem;
+}
+
+/* H5 级别链接的 span */
+.article-toc ul#tocList li.toc-level-5 a span {
+    font-weight: 400;
+    font-size: 0.8rem;
+}
+
+/* H6 级别链接的 span */
+.article-toc ul#tocList li.toc-level-6 a span {
+    font-weight: 400;
+    font-size: 0.8rem;
+}
+/* --- 结束：修改字体样式 --- */
+
+
+/* --- 修改：将底部横线伪元素应用到 span --- */
+.article-toc ul#tocList li a span::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; /* 调整横线与文字的距离 */
+    left: 0;
+    width: 100%; /* 现在 100% 是 span 的宽度 */
+    height: 1px;
+    background-color: #000000;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+/* --- 修改：悬停时作用于 a，但改变 span::after --- */
+.article-toc ul#tocList li a:hover span::after {
+    transform: scaleX(1);
+}
+
+/* 悬停时只改变 a 的颜色 */
+.article-toc ul#tocList li a:hover {
+    color: #000000;
+}
+
+/* --- 新增：Toast 通知样式 (New Approach) --- */
+#toastContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: none;
+    gap: -5px;
+}
+
+.toast-notification {
+    /* 基础样式 */
+    background-color: rgba(50, 50, 50, 0.85); /* 默认背景 */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    color: #fff;
+    /* 增加内边距，并保持左侧给图标留有足够空间 */
+    padding: 15px 25px 15px 45px; /* 上下 15px, 右 25px, 左 45px */
+    border-radius: 8px; /* 可以稍微增大圆角 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25); /* 可以稍微加深阴影 */
+    max-width: 350px; /* 可以适当增加最大宽度 */
+    font-size: 1rem; /* 增大字体大小 */
+    line-height: 1.5; /* 调整行高以适应新字体大小 */
+    pointer-events: auto;
+    cursor: default;
+    opacity: 0;
+    transform: translate(100%, 10px);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.4s ease,
+                background-color 0.3s ease;
+    will-change: transform, opacity, background-color;
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- 图标伪元素通用样式 --- */
+.toast-notification::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.4em;
+    height: 1.4em;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+}
+
+/* --- 成功状态 (绿色 + SVG √) --- */
+.toast-notification.toast-success {
+    background-color: #28a745;
+    color: #fff;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.toast-notification.toast-success::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z'/%3E%3C/svg%3E");
+}
+
+/* --- 错误状态 (红色 + SVG ×) --- */
+.toast-notification.toast-error {
+    background-color: #dc3545;
+    color: #fff;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.toast-notification.toast-error::before {
+    /* 移除 content, color, font-size */
+    /* content: '×'; */
+    /* color: #fff; */
+    /* font-size: 1.6rem; */
+    /* 添加 background-image */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    /* 确保尺寸与成功图标一致 (如果通用样式已设置，这里可能不需要) */
+    /* width: 1.4em; */
+    /* height: 1.4em; */
+}
+
+
+/* 可见状态 */
+.toast-notification.show {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+/* 隐藏状态 */
+.toast-notification.hide {
+    opacity: 0;
+    transform: translate(100%, 10px);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.3s ease-out,
+                background-color 0.3s ease;
+}
+/* --- 结束：Toast 通知样式 --- */
+
+/* 新增：关于弹窗选项卡样式 */
+.about-tabs {
+    display: flex;
+    margin: 10px 20px;
+    background-color: rgba(221, 221, 221, 0.8);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: var(--g3-radius-md, 4px); /* 使用与模态框相同的圆角变量 */
+    padding: 2px; /* 减小内边距使整体更扁平 */
+    overflow: hidden; /* 确保内容不超出圆角边界 */
+    border: 1px solid #ddd; /* 添加边框 */
+}
+
+.about-tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0; /* 减小内边距使选项卡更扁平 */
+    cursor: pointer;
+    transition: all 0.3s ease; /* 增加过渡效果，包括所有属性 */
+    font-size: 0.95rem; /* 稍微减小字体大小 */
+    color: #b3b3b3; /* 稍微加深颜色，提高对比度 */
+    border-radius: var(--g3-radius-md, 3px); /* 移除各项圆角 */
+    margin: 0; /* 移除间距 */
+    position: relative; /* 用于激活状态的底部指示器 */
+    user-select: none; /* 防止文本被选中 */
+}
+
+.about-tab.active {
+    background-color: #ffffff; /* 更亮的背景色 */
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* 与模态框相似的阴影 */
+    color: var(--g3-color-primary, #333); /* 使用与模态框相同的主色 */
+}
+
+/* 添加：tab项的悬停效果 */
+.about-tab:not(.active):hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* 添加：第一个和最后一个选项卡的特殊处理 */
+.about-tab:first-child {
+    border-top-left-radius: var(--g3-radius-md, 2px); /* 略小于容器圆角 */
+    border-bottom-left-radius: var(--g3-radius-md, 2px);
+}
+
+.about-tab:last-child {
+    border-top-right-radius: var(--g3-radius-md, 2px); /* 略小于容器圆角 */
+    border-bottom-right-radius: var(--g3-radius-md, 2px);
+}
+
+/* 调整关于弹窗的标题栏 - 向右上移动关闭按钮 */
+.about-modal .modal-header {
+    justify-content: flex-end; /* 将关闭按钮右对齐 */
+    padding: 5px 10px 0 15px; /* 减少顶部内边距，让按钮更靠上 */
+    min-height: auto; /* 减少最小高度 */
+    position: relative; /* 使子元素可以相对此定位 */
+}
+
+/* 关闭按钮样式调整 - 向右上移动 */
+.about-modal .close-modal {
+    position: absolute; /* 绝对定位 */
+    top: -10px; /* 减小顶部距离 */
+    right: -5px; /* 减小右侧距离 */
+    margin: 0; /* 移除边距 */
+    font-size: 22px; /* 可选：稍微调整大小 */
+    padding: 2px; /* 增加可点击区域 */
+    z-index: 1; /* 确保按钮在上层 */
+}
+
+/* 将选项卡上移 - 更新 */
+.about-tabs {
+    margin-top: -20px; /* 使用负边距让选项卡向上移动 */
+    margin-bottom: 15px; /* 保持底部边距 */
 } 
+
+/* 添加：为选项卡之间添加分隔线 */
+.about-tab:not(:last-child) {
+    position: relative; /* 为伪元素定位创建基准 */
+}
+
+/* 添加选项卡之间的竖线分隔符 */
+.about-tab:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 30%; /* 从顶部30%处开始 */
+    height: 40%; /* 减小高度为选项卡高度的40% */
+    width: 1px; /* 非常细的分隔线 */
+    background-color: #ddd; /* 浅灰色分隔线 */
+}
+
+/* 设置组样式 */
+.settings-group {
+    margin: 15px 0;
+}
+
+/* --- 通用设置区域样式重构 - Grid 方案 v2 --- */
+
+/* 设置项容器 */
+.setting-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr); /* 列1: 自动宽度, 列2: 最小0，最大占满剩余 */
+    gap: 15px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    min-height: 45px;
+    position: relative; /* 保持相对定位 */
+    overflow: visible; /* 关键：确保不会裁剪掉下拉列表 */
+}
+
+/* 设置项标签 */
+.setting-label {
+    grid-column: 1 / 2;        /* 明确指定在第一列 */
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.4;          /* 设定行高帮助对齐 */
+}
+
+/* 设置项控件容器 */
+.setting-control {
+    grid-column: 2 / 3;        /* 明确指定在第二列 */
+    justify-self: end;         /* 将此容器在其网格区域内靠右对齐 */
+    display: flex;             /* 内部使用 Flexbox */
+    align-items: center;       /* 垂直居中内部的开关 */
+}
+
+/* 模态框内的开关按钮样式 - 保持简化 */
+.modal-toggle {
+    display: inline-flex;      /* 使用 inline-flex */
+    align-items: center;       /* 内部垂直居中 */
+    vertical-align: middle;    /* 尝试垂直对齐 */
+    /* 确保没有 transform: scale() */
+}
+
+/* --- 结束：通用设置区域样式重构 --- */
+
+/* 保留其他必要的样式 */
+.settings-group {
+    margin: 15px 0;
+}
+
+.tab-content {
+    padding: 5px 10px;
+}
+
+/* 确保原始的 toggle-switch 样式仍然生效 */
+/* .toggle-switch { ... } */
+/* .toggle-switch-inner { ... } */
+/* .toggle-switch-circle { ... } */
+/* .toggle-switch.active .toggle-switch-circle { ... } */
+/* etc. */
+
+/* --- 通用设置区域样式 - 使用标准按钮 --- */
+
+/* 设置项容器 (保持 Grid 布局) */
+.setting-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 15px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    min-height: 45px;
+}
+
+/* 设置项标签 */
+.setting-label {
+    grid-column: 1 / 2;
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.4;
+}
+
+/* 设置项控件容器 */
+.setting-control {
+    grid-column: 2 / 3;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+}
+
+/* 新增：设置按钮样式 */
+.setting-button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    background-color: #f0f0f0;
+    color: #555;
+}
+
+/* 按钮：模糊启用状态 */
+.setting-button.blur-enabled {
+    background-color: #000000; /* 淡蓝色背景 */
+    color: #ffffff;            /* 深蓝色文字 */
+    border-color: #00000054;     /* 边框颜色 */
+}
+
+/* 按钮：模糊禁用状态 */
+.setting-button.blur-disabled {
+    background-color: #f8f9fa; /* 浅灰色背景 */
+    color: #6c757d;            /* 灰色文字 */
+    border-color: #dee2e6;     /* 边框颜色 */
+}
+
+.setting-button:hover {
+    opacity: 0.8;
+}
+
+
+/* --- 移除旧的/冲突的样式 --- */
+/* .modal-toggle { ... } */ /* 删除或注释掉所有 .modal-toggle 相关样式 */
+
+
+/* --- 结束：通用设置区域样式 --- */
+
+/* 保留其他必要的样式 */
+.settings-group {
+    margin: 15px 0;
+}
+
+.tab-content {
+    padding: 5px 10px;
+}
+
+/* --- 通用设置区域样式 --- */
+
+/* ... 其他设置项样式保持不变 ... */
+.setting-item {
+    /* ... */
+}
+.setting-label {
+    /* ... */
+}
+.setting-control {
+    /* ... */
+}
+.setting-button {
+    /* ... */
+}
+.setting-button.blur-enabled {
+    /* ... */
+}
+.setting-button.blur-disabled {
+    /* ... */
+}
+.setting-button:hover {
+    /* ... */
+}
+
+/* 新增：设置下拉菜单样式 */
+.setting-select {
+    padding: 5px 8px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    min-width: 100px; /* 给下拉菜单一个最小宽度 */
+    cursor: pointer;
+}
+
+.setting-select:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* --- 结束：通用设置区域样式 --- */
+
+/* --- 通用设置区域样式 --- */
+
+/* ... 其他设置项样式保持不变 ... */
+.setting-item {
+    /* ... */
+    position: relative; /* 为下拉菜单绝对定位提供基准 */
+}
+.setting-label {
+    /* ... */
+}
+.setting-control {
+    /* ... */
+}
+/* ... 其他按钮样式 ... */
+
+
+/* --- 移除旧的下拉菜单样式 --- */
+/* .setting-select { ... } */
+/* .setting-select:focus { ... } */
+
+
+/* --- 新增：自定义下拉菜单样式 --- */
+.custom-select-container {
+    position: relative;
+    min-width: 120px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom-select-display {
+    /* ... 样式保持不变 ... */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.custom-select-display:hover {
+    border-color: #ffffff;
+    background-color: #f1f3f5;
+}
+
+.custom-select-arrow {
+    transition: transform 0.3s ease;
+    color: #000000;
+}
+
+.custom-select-container.open .custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-options {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    z-index: 100; /* 增加 z-index 值 */
+    max-height: 150px;
+    overflow-y: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+}
+
+.custom-select-container.open .custom-select-options {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.custom-select-options li {
+    /* ... 样式保持不变 ... */
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.custom-select-options li:hover {
+    background-color: #e9ecef;
+}
+
+.custom-select-options li.selected {
+    background-color: #dee2e6;
+    font-weight: bold;
+}
+/* --- 结束：自定义下拉菜单样式 --- */
+
+/* --- 重写自定义下拉菜单样式 --- */
+.custom-select-container {
+    position: relative;
+    width: 120px;
+    z-index: 1000; /* 确保在其他元素之上 */
+}
+
+.custom-select-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #000000;
+}
+
+.custom-select-display:hover {
+    background-color: #f1f3f5;
+    border-color: #bbb;
+}
+
+.custom-select-arrow {
+    transition: transform 0.2s;
+}
+
+.custom-select-container.open .custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out, opacity 0.2s;
+    opacity: 0;
+    z-index: 1001;
+}
+
+.custom-select-container.open .custom-select-options {
+    max-height: 150px;
+    opacity: 1;
+}
+
+.custom-select-options li {
+    padding: 8px 12px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 14px;
+}
+
+.custom-select-options li:hover {
+    background-color: #f8f9fa;
+}
+
+.custom-select-options li.selected {
+    background-color: #e9ecef;
+    font-weight: 500;
+}
+
+/* 只移除高斯模糊按钮下方的边框线 */
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+/* 修复用户隐私选项卡文本颜色 */
+#privacy-content {
+    color: #333; /* 深灰色文本 */
+}
+
+#privacy-content h3 {
+    color: #333; /* 确保标题也是深色的 */
+}
+
+#privacy-content p {
+    color: #444; /* 段落文本颜色 */
+    margin-bottom: 10px; /* 段落间距 */
+}
+
+/* 如果需要，可以为所有选项卡内容设置默认颜色 */
+.tab-content {
+    color: #333;
+}
+
+/* GitHub Pages 图标和链接样式 */
+.about-hosted-on {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.about-hosted-on span {
+    margin-right: 8px;
+}
+
+.github-pages-link {
+    display: flex;
+    align-items: center;
+    color: #0366d6;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.github-pages-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.github-icon {
+    margin-right: 5px;
+}
+
+/* Cursor 编辑器图标和链接样式 */
+.about-built-with {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.about-built-with span {
+    margin-right: 8px;
+}
+
+.cursor-link {
+    display: flex;
+    align-items: center;
+    color: #5f23e4; /* Cursor 紫色 */
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.cursor-link:hover {
+    color: #4718b3; /* 深紫色 */
+    text-decoration: underline;
+}
+
+.cursor-icon {
+    margin-right: 5px;
+}
+
+/* 水平布局的链接容器 - 更居中的版本 */
+.about-links-container {
+    display: flex;
+    justify-content: center; /* 改为居中对齐 */
+    margin-top: 15px;
+    gap: 30px; /* 增加间距 */
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.about-link-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+    min-width: 120px;
+    justify-content: center; /* 子元素居中 */
+}
+
+/* 其余样式保持不变 */
+
+/* 美化文章内的横线 */
+.article-detail-content hr,
+#articleContent hr {
+    height: 1px;
+    border: none;
+    background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.2), rgba(0,0,0,0));
+    margin: 25px 0;
+    position: relative;
+}
+
+/* 添加一个居中的点或短线 */
+.article-detail-content hr::after,
+#articleContent hr::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #ccc;
+    border-radius: 50%;
+    top: -3.5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 可选：添加比较精致的悬停效果 */
+.article-detail-content hr:hover,
+#articleContent hr:hover {
+    background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.4), rgba(0,0,0,0));
+    transition: all 0.3s ease;
+}
+
+.article-detail-content hr:hover::after,
+#articleContent hr:hover::after {
+    background: #999;
+    transform: translateX(-50%) scale(1.2);
+    transition: all 0.3s ease;
+}
+
+/* 美化文章内的表格 */
+.article-detail-content table,
+#articleContent table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.95em;
+    box-shadow: 0px 0px 4px rgba(197, 197, 197, 0.699);
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.article-detail-content th,
+#articleContent th {
+    background-color: #c9c9c97c;
+    color: #333;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 0px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.article-detail-content td,
+#articleContent td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #c9c9c97c;
+    transition: all 0.3s ease;
+}
+
+.article-detail-content tr:nth-child(even),
+#articleContent tr:nth-child(even) {
+    background-color: #c9c9c97c;
+}
+
+.article-detail-content tr:last-child td,
+#articleContent tr:last-child td {
+    border-bottom: none;
+}
+
+.article-detail-content tr,
+#articleContent tr {
+    transition: background-color 0.5s ease;
+}
+
+.article-detail-content tr:hover,
+#articleContent tr:hover {
+    background-color: #f1f1f16e;
+}
+
+/* 响应式表格 */
+@media screen and (max-width: 768px) {
+    .article-detail-content table,
+    #articleContent table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

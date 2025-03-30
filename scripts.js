@@ -64,7 +64,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         document.getElementById('articleTitle').textContent = title;
-        document.getElementById('articleContent').innerHTML = '<p class="loading-text">正在加载文章内容...</p>';
+        const articleContentElement = document.getElementById('articleContent'); // 获取文章内容容器
+        articleContentElement.innerHTML = '<p class="loading-text">正在加载文章内容...</p>';
+        
+        // 清空旧目录
+        const tocList = document.getElementById('tocList');
+        if (tocList) {
+            tocList.innerHTML = ''; // 清空上一次生成的目录
+        }
         
         // 使用XMLHttpRequest替代fetch
         const xhr = new XMLHttpRequest();
@@ -76,23 +83,130 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(xhr.responseText, 'text/html');
-                const content = doc.querySelector('.post-content');
+                
+                // --- 扩展内容选择器，加入 .typora-export-content ---
+                let content = doc.querySelector('.post-content');
+                if (!content) {
+                    content = doc.querySelector('.article-content');
+                }
+                if (!content) {
+                    content = doc.querySelector('.entry-content');
+                }
+                // *** 新增：检查 typora 导出的内容容器 ***
+                if (!content) {
+                    content = doc.querySelector('.typora-export-content');
+                if (content) {
+                        console.log('[Content] Found content within .typora-export-content');
+                    }
+                }
+                // *** 结束新增检查 ***
+                if (!content) {
+                    content = doc.querySelector('main') || doc.querySelector('article') || doc.querySelector('.content');
+                }
+                // --- 结束扩展选择器 ---
                 
                 if (content) {
-                    document.getElementById('articleContent').innerHTML = content.innerHTML;
-                    
-                    const postDate = doc.querySelector('.post-date');
-                    if (postDate) {
-                        document.getElementById('articleDate').textContent = postDate.textContent;
-                    }
+                    articleContentElement.innerHTML = content.innerHTML; // 插入文章内容
+
+                    // --- 使用 requestAnimationFrame 确保 DOM 更新后再执行 ---
+                    requestAnimationFrame(() => {
+                        // 尝试再次获取日期（以防万一）
+                        const postDateElement = articleContentElement.querySelector('.post-date, .article-date, .entry-date');
+                        if (postDateElement) {
+                            document.getElementById('articleDate').textContent = postDateElement.textContent;
+                        } else {
+                            // 如果在插入后找不到，尝试从原始解析的文档中获取
+                            const parsedDate = doc.querySelector('.post-date, .article-date, .entry-date');
+                            document.getElementById('articleDate').textContent = parsedDate ? parsedDate.textContent : ''; // 找不到则清空
+                        }
+
+                        // --- 开始：生成目录 ---
+                        if (tocList) {
+                            tocList.innerHTML = ''; // 清空上一次生成的目录
+                            const headings = articleContentElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                            console.log(`[TOC] Found ${headings.length} headings in #articleContent.`);
+
+                            if (headings.length > 0) {
+                                headings.forEach((heading, index) => {
+                                    const headingText = heading.textContent.trim();
+                                    if (!headingText) {
+                                        console.log(`[TOC] Skipping empty heading at index ${index}.`);
+                                        return;
+                                    }
+
+                                    // --- 优先使用现有 ID，否则生成新 ID ---
+                                    let headingId = heading.id; // 尝试获取现有 ID
+                                    if (!headingId) {
+                                        // 如果没有 ID，生成一个基于索引的唯一 ID
+                                        headingId = `toc-heading-${index}`;
+                                        heading.id = headingId; // 设置到标题元素上
+                                        console.log(`[TOC] Generated ID ${headingId} for heading: ${headingText}`);
                 } else {
-                    console.error('未找到.post-content元素');
-                    document.getElementById('articleContent').innerHTML = `
+                                        console.log(`[TOC] Using existing ID ${headingId} for heading: ${headingText}`);
+                                    }
+                                    // --- 结束 ID 处理 ---
+
+                                    const li = document.createElement('li');
+                                    const link = document.createElement('a');
+                                    link.href = `#${headingId}`; // 使用最终确定的 ID
+
+                                    // --- 恢复 span 结构 (保持不变) ---
+                                    const span = document.createElement('span');
+                                    span.textContent = headingText;
+                                    link.appendChild(span);
+                                    // --- 结束恢复 ---
+
+                                    li.classList.add(`toc-level-${heading.tagName.toLowerCase()}`);
+
+                                    // 添加平滑滚动点击事件 (保持不变)
+                                    link.addEventListener('click', function(e) {
+                                        e.preventDefault();
+                                        const targetElement = document.getElementById(headingId);
+                                        if (targetElement) {
+                                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                        }
+                                    });
+
+                                    li.appendChild(link);
+                                    tocList.appendChild(li);
+                                });
+                            } else {
+                                // 如无标题，则在目录中显示提示文字
+                                const li = document.createElement('li');
+                                li.textContent = '无目录';
+                                li.style.fontStyle = 'italic'; // 可以给提示加点样式
+                                tocList.appendChild(li);
+                                console.log('[TOC] No headings found, displaying "无目录".'); // 添加调试日志
+                            }
+                        } else {
+                            console.warn('[TOC] tocList element not found.');
+                        }
+                        // --- 结束：生成目录 ---
+                    }); // 结束 requestAnimationFrame
+                } else {
+                    console.error('未找到内容元素，无法生成目录');
+                    // 如果找不到内容容器，也清空目录区域
+                    if (tocList) {
+                        tocList.innerHTML = '<li style="font-style: italic;">无法加载内容</li>';
+                    }
+                    // 如果找不到任何内容容器，则使用整个body内容（除去head）
+                    const bodyContent = doc.body;
+                    if (bodyContent) {
+                        // 移除脚本标签，防止执行不必要的脚本
+                        const scripts = bodyContent.querySelectorAll('script');
+                        scripts.forEach(script => script.remove());
+                        
+                        articleContentElement.innerHTML = bodyContent.innerHTML;
+                        showToast('文章格式不标准，但已尽可能显示内容', 'warning');
+                    } else {
+                        articleContentElement.innerHTML = `
                         <div class="error-message">
                             <h3>加载文章失败</h3>
-                            <p>文章内容格式不正确，未找到.post-content元素</p>
+                                <p>无法解析文章内容</p>
                         </div>
                     `;
+                        showToast('文章内容解析失败', 'error');
+                    }
                 }
             } else {
                 handleArticleError(xhr.statusText || '文件访问错误', articlePath);
@@ -584,58 +698,77 @@ document.addEventListener('DOMContentLoaded', function() {
         this.style.transform = '';
     });
     
-    // 返回锁屏动画函数 - 移除推拉效果
+    // 返回锁屏动画函数 - 执行与解锁动画相反的窗帘式下拉动画
     function backToLockAnimation() {
-        let progress = 0;
-        const animationDuration = 550;
+        const lockScreen = document.getElementById('lockScreen');
+        const mainContent = document.getElementById('mainContent');
+        const body = document.body;
+        const animationDuration = 550; // 保持与解锁动画时长一致
         const startTime = performance.now();
         
-        // 重置元素位置，准备下一次飞入动画
+        console.log("Starting backToLockAnimation..."); // 调试信息
+
+        // 1. 准备动画：重置元素状态为下次解锁做准备
         resetElementPositions();
         
-        // 添加过渡前的准备状态 - 锁屏在屏幕上方，完全清晰
-        lockScreen.style.transform = 'translateY(-100%)';
-        lockScreen.style.filter = 'blur(0px)'; // 初始状态不模糊
-        blurBg.style.filter = 'blur(0px)';
-        
-        // 强制重绘，确保初始状态被应用
-        lockScreen.offsetHeight;
-        
+        // 2. 设置动画初始状态并禁用 CSS 过渡，防止冲突
+        //    移除可能干扰动画的类
+        if (mainContent) {
+            mainContent.classList.remove('returning'); // 在动画开始前移除
+            mainContent.style.transition = 'none';
+            mainContent.style.filter = 'blur(0px)'; // 主内容初始清晰
+            mainContent.offsetHeight; // 强制浏览器重绘以应用样式
+        }
+        lockScreen.style.transition = 'none';
+        lockScreen.style.transform = 'translateY(-100%)'; // 锁屏初始位置：屏幕正上方
+        lockScreen.style.filter = 'blur(0px)';        // 锁屏初始清晰
+        lockScreen.offsetHeight; // 强制浏览器重绘以应用样式
+
+        // 3. 定义动画帧更新逻辑
         function animate(currentTime) {
             const elapsedTime = currentTime - startTime;
-            progress = Math.min(elapsedTime / animationDuration, 1);
-            
-            // 使用与上滑相同的缓动函数
+            let progress = Math.min(elapsedTime / animationDuration, 1);
+            // 使用与解锁相同的缓动函数，确保动画节奏一致
             const easedProgress = easeOutExpo(progress);
             
-            // 应用窗帘下拉式动画效果
-            // 锁屏从屏幕上方(-100%)逐渐下拉到原位(0%)
-            lockScreen.style.transform = `translateY(-${(1 - easedProgress) * 100}%)`;
-            
-            // 锁屏模糊效果从0逐渐增加到40px，与上滑相反
-            lockScreen.style.filter = `blur(${easedProgress * 40}px)`;
-            
-            // 主内容区域模糊效果从0逐渐增加到20px
-            mainContent.style.filter = `blur(${easedProgress * 20}px)`;
-            
+            // --- 核心动画：反向执行解锁动画 ---
+            // a) 锁屏 Y 轴位移：从 -100% (顶部) -> 0% (完全覆盖)
+            const translateY = (1 - easedProgress) * -100;
+            lockScreen.style.transform = `translateY(${translateY}%)`;
+
+            // b) 模糊效果：从 0px -> 最大模糊度
+            //    (注意：若 body 有 no-blur 类，此 filter 会被 CSS !important 覆盖，视觉上无模糊)
+            const lockBlur = easedProgress * 40;
+            const contentBlur = easedProgress * 20;
+            lockScreen.style.filter = `blur(${lockBlur}px)`;
+            if (mainContent) {
+                mainContent.style.filter = `blur(${contentBlur}px)`;
+            }
+            // --- 动画结束 ---
+
+            // 4. 判断动画是否继续
             if (progress < 1) {
-                requestAnimationFrame(animate);
+                requestAnimationFrame(animate); // 继续下一帧
             } else {
-                // 动画完成后，移除解锁类
-                body.classList.remove('unlocked');
+                // 5. 动画完成：清理和设置最终状态
+                console.log("backToLockAnimation finished."); // 调试信息
+                body.classList.remove('unlocked'); // 设置为锁定状态
                 isLocked = true;
                 
-                // 重置内联样式，使用类来控制
+                // 清理动画过程中添加的内联样式，让 CSS 规则接管
                 lockScreen.style.transform = '';
                 lockScreen.style.filter = '';
+                lockScreen.style.transition = ''; // 确保清除 transition:none
+                if (mainContent) {
                 mainContent.style.filter = '';
-                mainContent.style.transform = '';
-                
-                // 立即触发博客元素动画，不等待解锁完成
-                triggerBlogElementAnimations();
+                    mainContent.style.transform = ''; // 确保主内容的 transform 也被清除
+                    mainContent.style.transition = '';
+                }
+                // .returning 类已在动画开始前移除
             }
         }
-        
+
+        // 启动动画循环
         requestAnimationFrame(animate);
     }
     
@@ -778,34 +911,128 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 修改模糊效果开关的逻辑，默认开启
-    const blurToggleButton = document.getElementById('toggleBlurButton');
-    
-    if (blurToggleButton) {
-        // 检查本地存储中的状态（注意反转逻辑）
-        const blurDisabled = localStorage.getItem('blurDisabled') === 'true';
-        
-        // 如果储存的状态是禁用，则添加no-blur类
-        if (blurDisabled) {
-            document.body.classList.add('no-blur');
+    // 选项卡切换功能
+    const aboutTabs = document.querySelectorAll('.about-tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // 初始显示"关于"选项卡内容 (假设默认是关于)
+    const initialActiveTab = document.querySelector('.about-tab.active');
+    const initialTabContentId = initialActiveTab ? initialActiveTab.getAttribute('data-tab') + '-content' : 'about-content';
+    tabContents.forEach(content => {
+        content.style.display = content.id === initialTabContentId ? 'block' : 'none';
+    });
+    if (!initialActiveTab && document.querySelector('.about-tab[data-tab="about"]')) {
+        document.querySelector('.about-tab[data-tab="about"]').classList.add('active'); // 确保至少有一个激活
+    }
+
+    // 为所有选项卡添加点击事件
+    aboutTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // 移除所有选项卡的激活状态
+            aboutTabs.forEach(t => t.classList.remove('active'));
+            // 添加当前选项卡的激活状态
+            this.classList.add('active');
+            // 获取目标内容区域
+            const targetTab = this.getAttribute('data-tab');
+            // 隐藏所有内容
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+            });
+            // 显示当前选项卡对应的内容
+            const targetContent = document.getElementById(`${targetTab}-content`);
+            if (targetContent) {
+                targetContent.style.display = 'block';
+            }
+        });
+    });
+
+    // --- 高斯模糊控制重构 ---
+    const mainBlurToggle = document.getElementById('toggleBlurButton');
+    const modalBlurButton = document.getElementById('blurEffectButton');
+
+    // 函数：更新所有模糊控制按钮的外观
+    function updateBlurControls() {
+        const isBlurDisabled = body.classList.contains('no-blur');
+        const currentLang = localStorage.getItem('preferredLanguage') || 'zh'; // 获取当前语言
+
+        // 定义按钮文本的翻译
+        const blurButtonTexts = {
+            en: { enabled: 'Blur Enabled', disabled: 'Blur Disabled' },
+            zh: { enabled: '模糊已启用', disabled: '模糊已禁用' }
+        };
+        const texts = blurButtonTexts[currentLang] || blurButtonTexts['zh'];
+
+        // 更新主界面开关
+        if (mainBlurToggle) {
+            if (isBlurDisabled) {
+                mainBlurToggle.classList.remove('active');
+            } else {
+                mainBlurToggle.classList.add('active');
+            }
         }
-        
-        // 添加点击事件处理
-        blurToggleButton.addEventListener('click', function() {
-            // 切换body类名
-            document.body.classList.toggle('no-blur');
-            
-            // 添加动画效果
+
+        // 更新模态框按钮
+        if (modalBlurButton) {
+            if (isBlurDisabled) {
+                modalBlurButton.textContent = texts.disabled; // 使用翻译后的文本
+                modalBlurButton.classList.remove('blur-enabled');
+                modalBlurButton.classList.add('blur-disabled');
+            } else {
+                modalBlurButton.textContent = texts.enabled; // 使用翻译后的文本
+                modalBlurButton.classList.remove('blur-disabled');
+                modalBlurButton.classList.add('blur-enabled');
+            }
+        }
+    }
+
+    // 函数：切换模糊效果的核心逻辑
+    function toggleBlurEffect() {
+        body.classList.toggle('no-blur');
+        const isBlurDisabled = body.classList.contains('no-blur');
+        localStorage.setItem('blurDisabled', isBlurDisabled);
+        updateBlurControls();
+
+        // 定义 Toast 消息的翻译
+        const currentLang = localStorage.getItem('preferredLanguage') || 'zh';
+        const toastMessages = {
+            en: { enabled: 'Blur effect enabled', disabled: 'Blur effect disabled' },
+            zh: { enabled: '高斯模糊已开启', disabled: '高斯模糊已关闭' }
+        };
+        const messages = toastMessages[currentLang] || toastMessages['zh'];
+
+        if (isBlurDisabled) {
+            showToast(messages.disabled, "error"); // 使用翻译后的消息
+        } else {
+            showToast(messages.enabled, "success"); // 使用翻译后的消息
+        }
+    }
+
+    // 初始化：页面加载时根据 localStorage 设置初始状态并更新按钮
+    if (localStorage.getItem('blurDisabled') === 'true') {
+        body.classList.add('no-blur');
+    } else {
+        body.classList.remove('no-blur'); // 确保没有 no-blur 类
+    }
+    updateBlurControls(); // 设置初始按钮状态
+
+    // 为主界面开关添加事件监听器
+    if (mainBlurToggle) {
+        mainBlurToggle.addEventListener('click', function() {
+            // 添加动画效果 (如果需要)
             this.classList.add('toggling');
             setTimeout(() => {
                 this.classList.remove('toggling');
             }, 300);
-            
-            // 保存状态到本地存储
-            const isBlurDisabled = document.body.classList.contains('no-blur');
-            localStorage.setItem('blurDisabled', isBlurDisabled);
+            // 调用核心切换函数
+            toggleBlurEffect();
         });
     }
+
+    // 为模态框按钮添加事件监听器
+    if (modalBlurButton) {
+        modalBlurButton.addEventListener('click', toggleBlurEffect); // 直接调用核心切换函数
+    }
+    // --- 结束：高斯模糊控制重构 ---
 
     // 在文档加载前预加载关键图片
     const preloadBackgroundImage = new Image();
@@ -848,6 +1075,259 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // --- 新增：分页逻辑 ---
+    const postsContainer = document.querySelector('.blog-posts');
+    const paginationContainer = document.querySelector('.pagination');
+    const posts = postsContainer ? Array.from(postsContainer.querySelectorAll('.blog-post')) : [];
+    const postsPerPage = 3; // 每页显示的文章数量
+    let currentPage = 1;
+
+    if (postsContainer && paginationContainer && posts.length > 0) {
+        const totalPosts = posts.length;
+        const totalPages = Math.ceil(totalPosts / postsPerPage);
+
+        function showPage(page) {
+            currentPage = page;
+            const startIndex = (page - 1) * postsPerPage;
+            const endIndex = startIndex + postsPerPage;
+
+            // 隐藏所有文章
+            posts.forEach(post => post.style.display = 'none');
+
+            // 显示当前页的文章
+            posts.slice(startIndex, endIndex).forEach(post => post.style.display = ''); // 恢复默认 display
+
+            renderPagination(); // 重新渲染分页链接以更新 active 状态
+            window.scrollTo(0, postsContainer.offsetTop - 80); // 点击分页后滚动到文章列表顶部附近
+        }
+
+        function renderPagination() {
+            paginationContainer.innerHTML = ''; // 清空旧链接
+
+            if (totalPages <= 1) return; // 如果只有一页或没有文章，则不显示分页
+
+            // 上一页按钮
+            const prevButton = document.createElement('a');
+            prevButton.href = '#';
+            prevButton.innerHTML = '&laquo; 上一页';
+            prevButton.classList.add('page-prev');
+            if (currentPage === 1) {
+                prevButton.classList.add('disabled');
+            } else {
+                prevButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (currentPage > 1) {
+                        showPage(currentPage - 1);
+                    }
+                });
+            }
+            paginationContainer.appendChild(prevButton);
+
+            // 页码按钮
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('a');
+                pageButton.href = '#';
+                pageButton.textContent = i;
+                pageButton.classList.add('page-number');
+                if (i === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                pageButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showPage(i);
+                });
+                paginationContainer.appendChild(pageButton);
+            }
+
+            // 下一页按钮
+            const nextButton = document.createElement('a');
+            nextButton.href = '#';
+            nextButton.innerHTML = '下一页 &raquo;';
+            nextButton.classList.add('page-next');
+            if (currentPage === totalPages) {
+                nextButton.classList.add('disabled');
+            } else {
+                nextButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (currentPage < totalPages) {
+                        showPage(currentPage + 1);
+                    }
+                });
+            }
+            paginationContainer.appendChild(nextButton);
+        }
+
+        // 初始显示第一页
+        showPage(1);
+
+    } else {
+        if (!postsContainer) console.error("Pagination Error: '.blog-posts' container not found.");
+        if (!paginationContainer) console.error("Pagination Error: '.pagination' container not found.");
+        if (posts.length === 0 && postsContainer) console.warn("Pagination Info: No '.blog-post' elements found inside '.blog-posts'.");
+    }
+    // --- 结束：分页逻辑 ---
+
+    // --- 新增：返回锁屏按钮逻辑 ---
+    if (backToLock && coverElement) {
+        backToLock.addEventListener('click', function() {
+            console.log('返回锁屏');
+
+            // 1. 显示锁屏封面 (如果它被隐藏了)
+            coverElement.style.display = 'block'; // 或者 'flex', 取决于你的布局
+            // 可以添加动画类来平滑过渡
+            requestAnimationFrame(() => {
+                coverElement.classList.add('active'); // 假设 'active' 类控制显示动画
+                coverElement.style.opacity = '1'; // 渐显
+            });
+
+            // 2. 隐藏主要内容区域（但保留 mainContent 容器本身及其内部的常驻元素）
+            //    只隐藏需要隐藏的部分，例如文章列表和分页
+            if (postsContainer) {
+                postsContainer.style.display = 'none';
+            }
+            if (paginationContainer) {
+                paginationContainer.style.display = 'none';
+            }
+            // 如果有其他在进入内容区时显示，返回锁屏时需要隐藏的元素，也在这里处理
+
+            // 3. 移除可能表示内容区可见的 body 类名 (如果存在)
+            // document.body.classList.remove('content-visible'); // 示例类名
+
+            // 4. 添加表示锁屏状态的 body 类名 (可选, 用于样式控制)
+            document.body.classList.add('lock-screen-active');
+            document.body.classList.remove('content-entered'); // 移除表示已进入内容的类
+
+            // 5. 隐藏返回锁屏按钮本身
+            backToLock.style.display = 'none'; // 或者添加隐藏类
+
+            // 6. 确保 #mainContent 容器本身是可见的 (如果它之前被隐藏了)
+            //    这很重要，因为作者卡片可能在 #mainContent 内但不在 .blog-posts 内
+            if (mainContent) {
+                mainContent.style.display = ''; // 清除内联样式，让CSS控制
+                mainContent.classList.remove('hidden'); // 移除可能导致隐藏的类
+                // 可能需要移除导致其隐藏的特定样式或类
+            }
+
+            // 7. 确保作者卡片等常驻 UI 可见
+            const authorCard = document.querySelector('.author-card, .profile-card, .user-card, .personal-info');
+            if(authorCard) {
+                console.log('找到作者卡片，确保其可见');
+                authorCard.style.display = 'block'; // 明确设置为显示
+                authorCard.classList.remove('hidden'); // 移除可能导致隐藏的类
+                authorCard.style.visibility = 'visible'; // 确保可见性
+                authorCard.style.opacity = '1'; // 确保不透明度
+            } else {
+                console.warn('无法找到作者卡片，请检查选择器');
+            }
+            
+            // 8. 查找作者卡片的所有可能父容器，确保它们可见
+            const possibleParents = document.querySelectorAll('.user-info-container, .profile-container, .sidebar');
+            possibleParents.forEach(parent => {
+                if(parent) {
+                    parent.style.display = 'block';
+                    parent.classList.remove('hidden');
+                    parent.style.visibility = 'visible';
+                    parent.style.opacity = '1';
+                }
+            });
+
+            // 对其他需要保持可见的元素执行类似操作 (如模糊开关)
+            const blurToggle = document.getElementById('toggleBlurButton');
+            if(blurToggle) {
+                blurToggle.style.display = 'flex'; // 根据实际样式选择合适的display值
+                blurToggle.classList.remove('hidden');
+                blurToggle.style.visibility = 'visible';
+                blurToggle.style.opacity = '1';
+            }
+        });
+    } else {
+        if (!backToLock) console.error("返回锁屏按钮 #backToLock 未找到");
+        if (!coverElement) console.error("锁屏封面元素 .index-cover 未找到");
+    }
+    // --- 结束：返回锁屏按钮逻辑 ---
+
+    // --- 语言设置逻辑 (适配自定义下拉菜单) ---
+    const languageSelectorContainer = document.getElementById('languageSelectorContainer');
+    const languageDisplay = document.getElementById('languageDisplay');
+    const languageDisplayText = languageDisplay ? languageDisplay.querySelector('span') : null;
+    const languageOptions = document.getElementById('languageOptions');
+
+    // 函数：加载语言偏好并设置显示文本
+    function loadLanguagePreference() {
+        const savedLang = localStorage.getItem('preferredLanguage') || 'zh'; // 默认中文
+        let selectedOptionText = '选择语言'; // 默认文本
+
+        if (languageOptions) {
+            const options = languageOptions.querySelectorAll('li');
+            options.forEach(option => {
+                option.classList.remove('selected'); // 清除旧的选择状态
+                if (option.getAttribute('data-value') === savedLang) {
+                    selectedOptionText = option.textContent;
+                    option.classList.add('selected'); // 标记当前选项
+                }
+            });
+        }
+
+        if (languageDisplayText) {
+            languageDisplayText.textContent = selectedOptionText;
+        }
+        // 页面加载时应用一次语言
+        applyLanguageChange(savedLang);
+    }
+
+    // 函数：保存语言偏好 (保持不变)
+    function saveLanguagePreference(lang) {
+        localStorage.setItem('preferredLanguage', lang);
+    }
+
+    // 函数：应用语言更改 (保持不变, 仍需实现核心逻辑)
+    function applyLanguageChange(lang) {
+        console.log(`应用语言更改为: ${lang}`);
+        document.documentElement.lang = lang;
+        // ... (核心翻译逻辑占位符) ...
+        updateBlurControls(); // 确保模糊按钮文本更新
+    }
+
+    // 自定义下拉菜单交互逻辑
+    if (languageSelectorContainer && languageDisplay && languageOptions) {
+        // 点击显示区域，切换选项列表的显示/隐藏
+        languageDisplay.addEventListener('click', (event) => {
+            event.stopPropagation(); // 防止触发全局点击事件
+            languageSelectorContainer.classList.toggle('open');
+            // 添加日志确认类切换
+            console.log('Toggled .open class. Container classes:', languageSelectorContainer.className);
+        });
+
+        // 点击选项
+        languageOptions.addEventListener('click', (event) => {
+            if (event.target.tagName === 'LI') {
+                const selectedValue = event.target.getAttribute('data-value');
+                const selectedText = event.target.textContent;
+                if (languageDisplayText) {
+                    languageDisplayText.textContent = selectedText;
+                }
+                languageOptions.querySelectorAll('li').forEach(opt => opt.classList.remove('selected'));
+                event.target.classList.add('selected');
+                languageSelectorContainer.classList.remove('open');
+                saveLanguagePreference(selectedValue);
+                applyLanguageChange(selectedValue);
+                showToast(`语言已切换为 ${selectedText}`, 'success');
+            }
+        });
+
+        // 点击页面其他地方关闭下拉菜单
+        document.addEventListener('click', (event) => {
+            // 确保点击的目标不是显示区域本身或其子元素（如图标）
+            if (!languageDisplay.contains(event.target) && !languageOptions.contains(event.target) && languageSelectorContainer.classList.contains('open')) {
+                 console.log('Clicked outside, closing dropdown.');
+                 languageSelectorContainer.classList.remove('open');
+            }
+        });
+    } else {
+        console.warn('自定义语言选择器元素未完全找到');
+    }
+    // --- 结束：语言设置逻辑 ---
 });
 
 // 根据现有代码判断文章打开函数可能是这样的
@@ -908,3 +1388,86 @@ function loadArticleContent(id) {
         }, 800);
     });
 } 
+
+// --- 确保 showToast 函数存在 ---
+function showToast(message, type = 'default') {
+    const toastContainer = document.getElementById('toastContainer');
+    if (!toastContainer) {
+        console.error('Toast container not found!');
+        return;
+    }
+
+    // 1. 创建 Toast 元素
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification'; // 基础类
+    if (type === 'success') toast.classList.add('toast-success');
+    if (type === 'error') toast.classList.add('toast-error');
+    toast.textContent = message;
+    toast.style.opacity = '0'; // 初始隐藏
+
+    // 2. 添加到容器
+    toastContainer.appendChild(toast);
+
+    // 3. 计算新 Toast 高度
+    const shiftAmount = toast.offsetHeight - 30; // 加上间距
+
+    // 4. 向上移动现有的 Toast
+    const existingToasts = Array.from(toastContainer.children).slice(0, -1);
+    existingToasts.forEach(existingToast => {
+        let currentTranslateY = 0;
+        const currentTransform = existingToast.style.transform;
+        if (currentTransform && currentTransform.includes('translateY')) {
+            const match = currentTransform.match(/translateY\(([-.\d]+)px\)/);
+            if (match && match[1]) {
+                currentTranslateY = parseFloat(match[1]);
+            }
+        }
+        const newTranslateY = currentTranslateY - shiftAmount;
+        existingToast.style.transition = 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
+        existingToast.style.transform = `translateY(${newTranslateY}px)`;
+
+        // 清理 transition
+        function cleanupShiftTransition(event) {
+            if (event.propertyName === 'transform' && event.target === existingToast) {
+                existingToast.style.transition = '';
+                existingToast.removeEventListener('transitionend', cleanupShiftTransition);
+            }
+        }
+        existingToast.addEventListener('transitionend', cleanupShiftTransition);
+    });
+
+    // 5. 显示新的 Toast
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+             toast.style.opacity = ''; // 移除内联 opacity
+             toast.classList.add('show'); // 触发 CSS 动画
+        });
+    });
+
+    // 6. 自动隐藏
+    const displayDuration = 2500;
+    const hideTimeoutId = setTimeout(() => {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+        let transitionEnded = false;
+        function handleHideTransitionEnd(event) {
+            if (!transitionEnded && event.target === toast && (event.propertyName === 'transform' || event.propertyName === 'opacity')) {
+                transitionEnded = true;
+                toast.removeEventListener('transitionend', handleHideTransitionEnd);
+                if (toast.parentNode === toastContainer) {
+                    toastContainer.removeChild(toast);
+                }
+            }
+        }
+        toast.addEventListener('transitionend', handleHideTransitionEnd);
+        // 安全移除
+        setTimeout(() => {
+            if (!transitionEnded && toast.parentNode === toastContainer) {
+                toast.removeEventListener('transitionend', handleHideTransitionEnd);
+                toastContainer.removeChild(toast);
+            }
+        }, 700); // 略长于 CSS 隐藏动画时间
+    }, displayDuration);
+    toast.dataset.hideTimeoutId = hideTimeoutId; // 存储 timeout ID 以便需要时清除
+}
+// --- 结束 showToast 函数 --- 
