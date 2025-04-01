@@ -2008,7 +2008,7 @@ body.no-blur [style*="blur"] {
     border-radius: var(--g3-radius-md, 4px); /* 使用与模态框相同的圆角变量 */
     padding: 2px; /* 减小内边距使整体更扁平 */
     overflow: hidden; /* 确保内容不超出圆角边界 */
-    border: 1px solid #ffffff65; /* 添加边框 */
+    border: 0px solid #ffffff00; /* 添加边框 */
 }
 
 .about-tab {
