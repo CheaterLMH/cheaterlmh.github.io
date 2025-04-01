@@ -574,17 +574,6 @@ h1, h2, h3, h4, h5, h6 {
     color: #666;
 }
 
-.post-date {
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
-}
-
-.post-date:before {
-    content: "📅";
-    margin-right: 5px;
-}
-
 .post-category {
     background-color: #f0f0f0;
     padding: 3px 12px;
@@ -899,7 +888,7 @@ h1, h2, h3, h4, h5, h6 {
     right: -100%;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 默认暗色背景 */
+    background-color: rgba(0, 0, 0, 0.5);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -910,8 +899,93 @@ h1, h2, h3, h4, h5, h6 {
     overflow-y: auto;
     box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
     font-family: 'ZhCnAdfyh', 'Microsoft YaHei', sans-serif;
-    position: relative;  /* 确保其子元素绝对定位依据 */
+    position: relative;
 }
+
+/* 创建内容与目录的布局容器 */
+.article-detail-container {
+    display: flex;
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* 修改文章内容区样式 */
+.article-detail-content {
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 40px;
+    width: 75%; /* 减小宽度，为目录留出空间 */
+    margin: 0;  /* 删除原来的margin */
+    border-radius: var(--g3-radius-lg);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    color: #000;
+    font-family: 'ZhCnAdfyh', 'Microsoft YaHei', sans-serif !important;
+    position: relative;
+    z-index: 5;
+}
+
+/* 修改目录样式 */
+.article-toc {
+    /* 保持现有样式不变 */
+    position: sticky;
+    top: 100px;
+    right: 5%;
+    width: 22%;
+    max-height: 80vh;
+    overflow-y: auto;
+    align-self: flex-start;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: var(--g3-radius-lg);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    margin-left: 3%;
+    
+    /* 添加滚动条样式 */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent; /* Firefox */
+}
+
+/* Webkit浏览器的滚动条样式 (Chrome, Safari, Edge等) */
+.article-toc::-webkit-scrollbar {
+    width: 4px; /* 缩小滚动条宽度 */
+}
+
+.article-toc::-webkit-scrollbar-track {
+    background: transparent; /* 透明轨道 */
+}
+
+.article-toc::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2); /* 半透明滑块 */
+    border-radius: 4px; /* 圆角滑块 */
+}
+
+/* 悬停时样式 */
+.article-toc::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3); /* 悬停时加深 */
+}
+
+/* 新增：移除滚动条上的箭头按钮 */
+.article-toc::-webkit-scrollbar-button {
+    display: none; /* 完全隐藏箭头按钮 */
+}
+
+/* 另一种方法是将高度设为0 (可选，display:none 通常足够) */
+/*
+.article-toc::-webkit-scrollbar-button:vertical:start:decrement,
+.article-toc::-webkit-scrollbar-button:vertical:end:increment {
+    height: 0;
+    width: 0;
+    display: none;
+}
+*/
 
 /* 添加自定义中文字体 */
 @font-face {
@@ -936,6 +1010,8 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
     color: #000;
     font-family: 'ZhCnAdfyh', 'Microsoft YaHei', sans-serif !important; /* 确保字体应用 */
+    position: relative; /* 确保正确的定位上下文 */
+    z-index: 5; /* 确保正确的层叠顺序 */
 }
 
 /* 确保文章详情中的所有文本元素使用自定义字体 */
@@ -1699,79 +1775,52 @@ body.no-blur [style*="blur"] {
     }
 }
 
-/* 修改文章详情页右侧目录样式，使其背景与内容区一致 */
-.article-toc {
-    position: absolute;
-    top: 10%;
-    right: 5%;
-    width: 20%;
-    max-height: 80%;
-    overflow-y: auto;
-    /* 应用与 .article-detail-content 相同的背景和模糊效果 */
-    background-color: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 15px; /* 稍微调整内边距 */
-    border-radius: var(--g3-radius-lg); /* 使用与内容区相同的圆角 */
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); /* 使用与内容区相同的阴影 */
-}
-
+/* 目录标题样式 */
 .article-toc h3 {
-    font-size: 1.1rem; /* 调整标题大小 */
-    margin-bottom: 15px;
-    color: #333;
-    text-align: center;
-    font-weight: 500; /* 调整字重 */
+    font-size: 1.1rem; /* 标题字号 */
+    margin-bottom: 15px; /* 底部边距 */
+    color: #333; /* 文字颜色 */
+    text-align: center; /* 居中对齐 */
+    font-weight: 500; /* 字重 */
 }
 
+/* 目录列表容器 */
 .article-toc ul#tocList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    list-style: none; /* 移除默认列表样式 */
+    padding: 0; /* 移除内边距 */
+    margin: 0; /* 移除外边距 */
 }
 
+/* 目录列表项 */
 .article-toc ul#tocList li {
-    margin-bottom: 12px;
-    padding-left: 0;
+    margin-bottom: 12px; /* 项目间距 */
+    padding-left: 0; /* 移除左内边距 */
 }
 
-/* --- 重新添加并修改：根据级别调整字体粗细和大小 --- */
-/* H1 级别链接 */
+/* 不同级别标题的样式定制 */
+/* H1级别标题链接 - 最高级别 */
 .article-toc ul#tocList li.toc-level-1 a {
-    font-weight: 600; /* 最粗 */
-    font-size: 1.0rem; /* 稍大 */
+    font-weight: 600; /* 最粗的字重 */
+    font-size: 1.0rem; /* 最大的字号 */
 }
 
-/* H2 级别链接 */
+/* H2级别标题链接 - 二级标题 */
 .article-toc ul#tocList li.toc-level-2 a {
-    font-weight: 500; /* 次粗 */
-    font-size: 0.95rem; /* 略大 */
+    font-weight: 500; /* 中等字重 */
+    font-size: 0.95rem; /* 略小字号 */
 }
 
-/* H3 级别链接 */
+/* H3级别标题链接 - 三级标题 */
 .article-toc ul#tocList li.toc-level-3 a {
-    font-weight: 400; /* 正常 */
-    font-size: 0.9rem;  /* 基准大小 */
+    font-weight: 400; /* 普通字重 */
+    font-size: 0.9rem; /* 基准字号 */
 }
 
-/* H4 级别链接 */
+/* H4级别标题链接 - 四级标题 */
 .article-toc ul#tocList li.toc-level-4 a {
-    font-weight: 400; /* 正常 */
-    font-size: 0.85rem; /* 稍小 */
+    font-weight: 400; /* 普通字重 */
+    font-size: 0.85rem; /* 较小字号 */
 }
-
-/* H5 级别链接 */
-.article-toc ul#tocList li.toc-level-5 a {
-    font-weight: 400; /* 正常 */
-    font-size: 0.8rem;  /* 更小 */
-}
-
-/* H6 级别链接 */
-.article-toc ul#tocList li.toc-level-6 a {
-    font-weight: 400; /* 正常 */
-    font-size: 0.8rem;  /* 最小 */
-}
-/* --- 结束：修改字体样式 --- */
 
 /* 调整 a 标签通用样式 - 移除 text-align，padding 只控制垂直 */
 .article-toc ul#tocList li a {
@@ -1823,20 +1872,6 @@ body.no-blur [style*="blur"] {
     font-weight: 400;
     font-size: 0.85rem;
 }
-
-/* H5 级别链接的 span */
-.article-toc ul#tocList li.toc-level-5 a span {
-    font-weight: 400;
-    font-size: 0.8rem;
-}
-
-/* H6 级别链接的 span */
-.article-toc ul#tocList li.toc-level-6 a span {
-    font-weight: 400;
-    font-size: 0.8rem;
-}
-/* --- 结束：修改字体样式 --- */
-
 
 /* --- 修改：将底部横线伪元素应用到 span --- */
 .article-toc ul#tocList li a span::after {
@@ -1973,7 +2008,7 @@ body.no-blur [style*="blur"] {
     border-radius: var(--g3-radius-md, 4px); /* 使用与模态框相同的圆角变量 */
     padding: 2px; /* 减小内边距使整体更扁平 */
     overflow: hidden; /* 确保内容不超出圆角边界 */
-    border: 1px solid #ddd; /* 添加边框 */
+    border: 1px solid #ffffff65; /* 添加边框 */
 }
 
 .about-tab {
@@ -2051,7 +2086,7 @@ body.no-blur [style*="blur"] {
     top: 30%; /* 从顶部30%处开始 */
     height: 40%; /* 减小高度为选项卡高度的40% */
     width: 1px; /* 非常细的分隔线 */
-    background-color: #ddd; /* 浅灰色分隔线 */
+    background-color: #d1d1d1; /* 浅灰色分隔线 */
 }
 
 /* 设置组样式 */
@@ -2474,23 +2509,6 @@ body.no-blur [style*="blur"] {
     margin-right: 8px;
 }
 
-.cursor-link {
-    display: flex;
-    align-items: center;
-    color: #5f23e4; /* Cursor 紫色 */
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.cursor-link:hover {
-    color: #4718b3; /* 深紫色 */
-    text-decoration: underline;
-}
-
-.cursor-icon {
-    margin-right: 5px;
-}
-
 /* 水平布局的链接容器 - 更居中的版本 */
 .about-links-container {
     display: flex;
@@ -2609,5 +2627,169 @@ body.no-blur [style*="blur"] {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
+    }
+}
+
+/* 网站运行时间样式 */
+.runtime-counter {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 10px;
+}
+
+.runtime-counter span {
+    color: #666;
+    font-weight: 500;
+}
+
+/* 关于页面中的运行时间样式 */
+.about-runtime {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 15px 0;
+    padding: 8px 15px;
+    background-color: rgba(240, 240, 240, 0.5);
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.about-runtime span {
+    font-weight: 500;
+    color: #333;
+}
+
+/* 响应式设计：适应不同屏幕大小 */
+@media (max-width: 1024px) {
+    /* 在中等屏幕上调整目录布局 */
+    .article-toc {
+        width: 25%; /* 稍微增加宽度 */
+        margin-left: 2%; /* 减少间距 */
+    }
+    
+    .article-detail-content {
+        width: 70%; /* 相应减少内容区宽度 */
+    }
+}
+
+@media (max-width: 768px) {
+    /* 平板设备：调整为垂直布局 */
+    .article-detail-container {
+        flex-direction: column; /* 改为纵向排列 */
+    }
+    
+    .article-toc {
+        position: relative; /* 取消粘性定位 */
+        width: 100%; /* 全宽显示 */
+        margin: 20px 0 0 0; /* 重置外边距 */
+        max-height: 300px; /* 限制高度 */
+    }
+    
+    .article-detail-content {
+        width: 100%; /* 全宽显示 */
+    }
+}
+
+/* 移除滚动条上的箭头按钮 */
+.article-toc::-webkit-scrollbar-button {
+    display: none; /* 完全隐藏箭头按钮 */
+}
+
+/* 另一种方法是将高度设为0 */
+.article-toc::-webkit-scrollbar-button:vertical:start:decrement,
+.article-toc::-webkit-scrollbar-button:vertical:end:increment {
+    height: 0;
+    width: 0;
+    display: none;
+}
+
+/* ================================== */
+/* == 文章详情页 Header 样式调整 == */
+/* ================================== */
+
+.article-detail-page header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 保持两端对齐 */
+    padding: 10px 25px;
+    background-color: rgba(255, 255, 255, 0.4);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 返回按钮样式 (假设已有样式，这里只调整间距) */
+.article-detail-page header #closeArticle {
+    margin-right: 20px; /* 在返回按钮右侧添加间距 */
+    flex-shrink: 0; /* 防止按钮被压缩 */
+    /* 确保继承或设置了合适的按钮样式 */
+    /* 例如: background: none; border: none; color: #ccc; cursor: pointer; padding: 5px 10px; font-size: 0.9rem; */
+}
+.article-detail-page header #closeArticle:hover {
+    /* 例如: color: #fff; */
+}
+
+
+/* 调整博客标题的左边距 */
+.article-detail-page header .blog-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0; /* 移除默认外边距 */
+    /* margin-left: 0; /* 确保没有额外的左边距 */
+    flex-shrink: 0;
+}
+
+/* 文章标题和日期的容器 */
+.article-detail-page header .article-header-main {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0 20px; /* 保持左右边距 */
+    overflow: hidden;
+}
+
+/* ... 文章标题 (#articleTitle) 和日期 (#articleDate) 样式保持不变 ... */
+
+
+/* 调整博客菜单的右边距 */
+.article-detail-page header .blog-menu {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* margin-right: 0; /* 确保没有额外的右边距 */
+    flex-shrink: 0;
+}
+
+/* ... 菜单项 (li, a) 样式保持不变 ... */
+
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .article-detail-page header {
+        padding: 8px 15px;
+    }
+
+    /* 在小屏幕上，可能需要调整返回按钮和标题的间距 */
+    .article-detail-page header #closeArticle {
+        margin-right: 15px;
+    }
+
+    .article-detail-page header .blog-menu {
+        display: none; /* 保持隐藏菜单 */
+    }
+
+    .article-detail-page header .article-header-main {
+        margin: 0 10px;
+    }
+
+    .article-detail-page header .blog-title {
+        font-size: 1.1rem;
+    }
+
+    .article-detail-page header #articleTitle {
+        font-size: 1rem;
     }
 }

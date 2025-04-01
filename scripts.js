@@ -108,6 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (content) {
                     articleContentElement.innerHTML = content.innerHTML; // 插入文章内容
 
+                    // 调用增强版的图片修复函数
+                    fixArticleImages(articlePath, articleContentElement);
+
                     // --- 使用 requestAnimationFrame 确保 DOM 更新后再执行 ---
                     requestAnimationFrame(() => {
                         // 尝试再次获取日期（以防万一）
@@ -1080,7 +1083,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const postsContainer = document.querySelector('.blog-posts');
     const paginationContainer = document.querySelector('.pagination');
     const posts = postsContainer ? Array.from(postsContainer.querySelectorAll('.blog-post')) : [];
-    const postsPerPage = 3; // 每页显示的文章数量
+    const postsPerPage = 6; // 每页显示的文章数量
     let currentPage = 1;
 
     if (postsContainer && paginationContainer && posts.length > 0) {
@@ -1328,6 +1331,288 @@ document.addEventListener('DOMContentLoaded', function() {
         console.warn('自定义语言选择器元素未完全找到');
     }
     // --- 结束：语言设置逻辑 ---
+
+    // 在 openArticleDetail 函数中添加一个更强大的图片修复函数
+    function handleImageError(articlePath, img) {
+        console.log('处理图片加载错误:', img.src);
+        
+        // 提取文章基础路径
+        const pathParts = articlePath.split('/');
+        pathParts.pop(); // 移除文件名
+        const basePath = pathParts.join('/');
+        
+        // 尝试不同的路径组合
+        const originalSrc = img.getAttribute('src');
+        const possiblePaths = [
+            // 原始路径
+            originalSrc,
+            // 相对于文章路径
+            `${basePath}/${originalSrc}`,
+            // 移除开头的 ./ 
+            originalSrc.replace(/^\.\//, `${basePath}/`),
+            // 相对于网站根目录
+            `/${originalSrc}`,
+            // 相对于images目录
+            `/images/${originalSrc.split('/').pop()}`,
+            // 相对于posts/images目录
+            `/posts/images/${originalSrc.split('/').pop()}`
+        ];
+        
+        // 轮流尝试所有可能的路径
+        function tryNextPath(index) {
+            if (index >= possiblePaths.length) {
+                // 所有路径都失败，显示替代图像
+                img.src = 'data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 500 300%22%3E%3Crect fill%3D%22%23f8f8f8%22 width%3D%22500%22 height%3D%22300%22%2F%3E%3Ctext fill%3D%22%23aaa%22 font-family%3D%22Arial%2C sans-serif%22 font-size%3D%2220%22 x%3D%22250%22 y%3D%22150%22 text-anchor%3D%22middle%22 dominant-baseline%3D%22middle%22%3E图片加载失败%3C%2Ftext%3E%3C%2Fsvg%3E';
+                img.classList.add('image-load-failed');
+                return;
+            }
+            
+            const newSrc = possiblePaths[index];
+            console.log(`尝试加载图片路径 (${index+1}/${possiblePaths.length}):`, newSrc);
+            
+            // 使用Image对象预加载图片
+            const testImg = new Image();
+            testImg.onload = function() {
+                // 成功加载，更新原始图片
+                img.src = newSrc;
+                img.classList.remove('image-loading');
+                img.classList.add('image-loaded');
+                console.log('图片加载成功:', newSrc);
+            };
+            testImg.onerror = function() {
+                // 失败，尝试下一个路径
+                setTimeout(() => tryNextPath(index + 1), 50);
+            };
+            testImg.src = newSrc;
+        }
+        
+        // 标记图片为加载中状态
+        img.classList.add('image-loading');
+        
+        // 开始尝试第一个路径
+        tryNextPath(0);
+    }
+
+    // 修改 fixArticleImages 函数，删除自定义灯箱代码，改用Fancybox
+    function fixArticleImages(articlePath, articleContentElement) {
+        console.log('开始修复文章图片路径...');
+        
+        // 添加基础图片样式（保留样式但移除灯箱相关样式）
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+            /* 基础图片样式 */
+            #articleContent img, .article-detail-content img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: 15px auto;
+                border-radius: 16px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1)
+            }
+
+            #articleContent img:hover, .article-detail-content img:hover {
+                transform: scale(0.90);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+        `;
+        document.head.appendChild(styleElement);
+        
+        // 处理所有图片
+        const images = articleContentElement.querySelectorAll('img');
+        console.log(`找到 ${images.length} 张图片需要处理`);
+        
+        if (images.length === 0) {
+            console.log('文章中没有找到图片');
+            return;
+        }
+        
+        images.forEach((img) => {
+            // 保存原始src作为data属性
+            const originalSrc = img.getAttribute('src');
+            if (!originalSrc) return;
+            
+            img.setAttribute('data-original-src', originalSrc);
+            
+            // 修复图片后使用Fancybox
+            setTimeout(() => {
+                if (!img.complete || img.naturalWidth === 0) {
+                    handleImageError(articlePath, img);
+                } else {
+                    console.log('图片已正常加载:', originalSrc);
+                    img.classList.add('image-loaded');
+                }
+                
+                // 将图片包装在链接中，以便Fancybox可以使用
+                if (!img.parentNode.tagName || img.parentNode.tagName !== 'A') {
+                    const imgWrapper = document.createElement('a');
+                    imgWrapper.href = img.src; // 使用当前src作为链接
+                    imgWrapper.setAttribute('data-fancybox', 'article-gallery');
+                    imgWrapper.setAttribute('data-caption', img.alt || '图片');
+                    
+                    // 将图片从当前位置移动到链接内
+                    img.parentNode.insertBefore(imgWrapper, img);
+                    imgWrapper.appendChild(img);
+                }
+            }, 100);
+            
+            // 添加错误处理
+            img.onerror = function() {
+                handleImageError(articlePath, this);
+            };
+        });
+        
+        // 同样处理背景图片
+        const elementsWithBgImage = articleContentElement.querySelectorAll('[style*="background-image"]');
+        console.log(`找到 ${elementsWithBgImage.length} 个背景图片元素`);
+        
+        elementsWithBgImage.forEach((el) => {
+            const style = el.getAttribute('style');
+            if (!style) return;
+            
+            const matches = style.match(/background-image:\s*url\(['"]?([^'")]+)['"]?\)/i);
+            if (matches && matches[1]) {
+                const bgUrl = matches[1];
+                
+                // 将相对路径转换为绝对路径
+                if (!bgUrl.startsWith('http') && !bgUrl.startsWith('data:')) {
+                    const pathParts = articlePath.split('/');
+                    pathParts.pop();
+                    const basePath = pathParts.join('/');
+                    
+                    // 创建一系列可能的路径
+                    const possibleBgPaths = [
+                        bgUrl,
+                        `${basePath}/${bgUrl}`,
+                        `/${bgUrl}`,
+                        `/images/${bgUrl.split('/').pop()}`
+                    ];
+                    
+                    // 存储原始背景URL
+                    el.setAttribute('data-original-bg', bgUrl);
+                    
+                    // 尝试预加载第一个路径
+                    const testImg = new Image();
+                    testImg.onload = function() {
+                        // 成功加载，更新样式
+                        const newStyle = style.replace(
+                            /background-image:\s*url\(['"]?([^'")]+)['"]?\)/i,
+                            `background-image: url("${possibleBgPaths[0]}")`
+                        );
+                        el.setAttribute('style', newStyle);
+                    };
+                    testImg.onerror = function() {
+                        // 首选路径失败，使用常见路径
+                        const newStyle = style.replace(
+                            /background-image:\s*url\(['"]?([^'")]+)['"]?\)/i,
+                            `background-image: url("/images/${bgUrl.split('/').pop()}")`
+                        );
+                        el.setAttribute('style', newStyle);
+                    };
+                    testImg.src = possibleBgPaths[0];
+                }
+            }
+        });
+        
+        // 初始化Fancybox
+        if (typeof Fancybox !== 'undefined') {
+            Fancybox.bind('[data-fancybox="article-gallery"]', {
+                // Fancybox配置选项
+                Image: {
+                    zoom: true,
+                },
+                Thumbs: {
+                    autoStart: true,
+                }
+            });
+        } else {
+            console.warn('Fancybox库未加载，无法初始化图片灯箱功能');
+        }
+    }
+
+    // --- 添加 Lenis 滚动加速度效果 ---
+    // 创建 Lenis 滚动实例并添加加速度效果
+    const mainLenis = new Lenis({
+        wrapper: document.querySelector('.main-content'), // 主内容滚动容器
+        duration: 1.2, // 增加持续时间以获得更明显的加速效果
+        easing: (t) => {
+            // 自定义加速度曲线：开始慢，然后迅速加速
+            return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        },
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1.5, // 增加滚轮乘数
+        lerp: 0.08, // 线性插值系数（0.08是一个较快的值）
+        infinite: false
+    });
+    
+    // 文章详情页的 Lenis 实例
+    const articleLenis = new Lenis({
+        wrapper: document.querySelector('.article-detail-page'),
+        duration: 1.2,
+        easing: (t) => {
+            return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        },
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1.5,
+        lerp: 0.08,
+        infinite: false
+    });
+    
+    // 文章目录的 Lenis 实例
+    const articleTocLenis = new Lenis({
+        wrapper: document.querySelector('.article-toc'),
+        duration: 1.0, // 目录区域可以略快一些
+        easing: (t) => {
+            return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        },
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1.3,
+        lerp: 0.07,
+        infinite: false
+    });
+    
+    // 滚动时触发加速度效果的回调函数
+    mainLenis.on('scroll', (e) => {
+        // 可以在这里添加基于滚动的动画效果
+        // 例如滚动速度越快，某些元素越模糊等
+    });
+    
+    // RAF (requestAnimationFrame) 循环
+    function raf(time) {
+        mainLenis.raf(time);
+        articleLenis.raf(time);
+        articleTocLenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+    
+    // 窗口大小改变时重新计算
+    window.addEventListener('resize', () => {
+        mainLenis.resize();
+        articleLenis.resize();
+        articleTocLenis.resize();
+    });
+    
+    // 停止滚动时的回弹效果
+    function handleScrollStop() {
+        mainLenis.scrollTo('current', { 
+            duration: 0.8, 
+            easing: (t) => Math.sin((t * Math.PI) / 2) // 回弹效果
+        });
+    }
+    
+    let scrollTimeout;
+    window.addEventListener('wheel', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(handleScrollStop, 150);
+    }, { passive: true });
+    // --- 结束：Lenis 滚动加速度效果 ---
 });
 
 // 根据现有代码判断文章打开函数可能是这样的

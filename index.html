@@ -308,6 +308,8 @@
             <a href="#">联系我</a>
         </div>
         <p class="copyright">© 2021-2025 我的博客. 保留所有权利.</p>
+        <!-- 添加网站运行时间显示 -->
+        <p class="runtime-counter">本站已运行 <span id="runTime">计算中...</span></p>
     </div>
 </footer>
 </div>
@@ -315,31 +317,39 @@
 <!-- 文章详情页面 -->
 <div class="article-detail-page">
     <header>
+        <!-- 1. 将返回按钮移到最左侧 -->
         <button id="closeArticle">返回</button>
-        <h2 id="articleTitle">文章详情</h2>
-    </header>
-    <div class="article-detail-content">
-        <div class="post-meta">
-            <span class="post-date" id="articleDate">2023年10月15日</span>
-        </div>
-        <div id="articleContent">
-            <p>加载中...</p>
-        </div>
-    </div>
-    <div class="article-toc">
-        <h3>目录</h3>
-        <ul id="tocList">
-            <!-- 文章内容标题目录将由脚本自动生成 -->
-        </ul>
-    </div>
-</div>
 
-<!-- 模糊效果开关 -->
-<div id="toggleBlurButton" class="toggle-switch">
-    <div class="toggle-switch-inner">
-        <div class="toggle-switch-circle"></div>
+        <!-- 2. 博客标题 -->
+        <h1 class="blog-title">LMH0376</h1>
+
+        <!-- 3. 文章标题和日期 -->
+        <div class="article-header-main">
+            <h2 id="articleTitle">文章标题加载中...</h2>
+            <span id="articleDate"></span>
+        </div>
+
+        <!-- 4. 博客菜单 -->
+        <ul class="blog-menu">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">归档</a></li>
+            <li><a href="#">分类</a></li>
+            <li><a href="#about">关于</a></li>
+        </ul>
+
+        <!-- 关闭按钮已移到左侧 -->
+    </header>
+    <div class="article-scroll-container">
+        <div class="article-detail-container">
+            <div class="article-detail-content" id="articleContent">
+                <!-- 文章内容将加载到这里 -->
+            </div>
+            <aside class="article-toc">
+                <h3>目录</h3>
+                <ul id="tocList"></ul>
+            </aside>
+        </div>
     </div>
-    <span class="toggle-label">高斯模糊</span>
 </div>
 
 <!-- 修改返回锁屏按钮 -->
@@ -386,9 +396,9 @@
                         </div>
                     </div>
                     
-                    <!-- 高斯模糊效果设置 -->
+                    <!-- 设置 -->
                     <div class="setting-item">
-                        <span class="setting-label">高斯模糊效果</span>
+                        <span class="setting-label">BlurRendering</span>
                         <div class="setting-control">
                             <button id="blurEffectButton" class="setting-button">切换</button>
                         </div>
@@ -406,35 +416,37 @@
                 <div class="about-info">
                     <h3>LMH#0376</h3>
                     <p class="about-bio">cheaterlmh.github.io@gmail.com</p>
+                    <!-- 添加网站运行时间显示 -->
+                    <p class="about-runtime">本站已稳定运行 <span id="aboutRunTime">计算中...</span></p>
                     <!-- 链接容器 - 水平排列 -->
                     <div class="about-links-container">
-                    <!-- GitHub Pages 图标和链接 -->
-                    <div class="about-link-item">
-                        <span>托管于:</span>
-                        <a href="https://pages.github.com/" target="_blank" class="github-pages-link">
-                            <svg class="github-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                            </svg>
-                            GitHub Pages
-                        </a>
-                    </div>
-                    <!-- Cursor 编辑器图标和链接 -->
-                    <div class="about-link-item">
-                        <span>构建于:</span>
-                        <a href="https://cursor.sh/" target="_blank" class="cursor-link">
-                            <svg class="cursor-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 22v-2"></path>
-                                <path d="M12 22h10"></path>
-                                <path d="M7 22h2"></path>
-                                <path d="M17 2V0"></path>
-                                <path d="M12 2h10"></path>
-                                <path d="M7 2h2"></path>
-                                <path d="M17 17V7"></path>
-                                <path d="M17 12H7"></path>
-                            </svg>
-                            Cursor
-                        </a>
-                    </div>
+                        <!-- GitHub Pages 图标和链接 -->
+                        <div class="about-link-item">
+                            <span>托管于:</span>
+                            <a href="https://pages.github.com/" target="_blank" class="github-pages-link">
+                                <svg class="github-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                </svg>
+                                GitHub Pages
+                            </a>
+                        </div>
+                        <!-- Cursor 编辑器图标和链接 -->
+                        <div class="about-link-item">
+                            <span>构建于:</span>
+                            <a href="https://cursor.sh/" target="_blank" class="cursor-link">
+                                <svg class="cursor-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 22v-2"></path>
+                                    <path d="M12 22h10"></path>
+                                    <path d="M7 22h2"></path>
+                                    <path d="M17 2V0"></path>
+                                    <path d="M12 2h10"></path>
+                                    <path d="M7 2h2"></path>
+                                    <path d="M17 17V7"></path>
+                                    <path d="M17 12H7"></path>
+                                </svg>
+                                Cursor
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -515,7 +527,89 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     });
+
+// 网站运行时间计算
+function calculateRuntime() {
+    // 设置网站起始时间，格式：年，月(0-11)，日，时，分，秒
+    const startDate = new Date(2024, 9, 13, 15, 38, 26); // 2024年10月13日15:38:26
+    const currentDate = new Date();
+    const diff = currentDate - startDate;
+    
+    // 计算时间差
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    // 格式化时间差字符串
+    const runtimeStr = days + " 天 " + hours + " 小时 " + minutes + " 分 " + seconds + " 秒";
+    
+    // 更新页脚显示
+    const footerRuntime = document.getElementById('runTime');
+    if (footerRuntime) {
+        footerRuntime.innerHTML = runtimeStr;
+    }
+    
+    // 更新关于页面显示
+    const aboutRuntime = document.getElementById('aboutRunTime');
+    if (aboutRuntime) {
+        aboutRuntime.innerHTML = runtimeStr;
+    }
+}
+
+// 页面加载完成后立即计算
+document.addEventListener('DOMContentLoaded', function() {
+    calculateRuntime();
+    // 每秒更新一次
+    setInterval(calculateRuntime, 1000);
+});
 </script>
+<script src="lenis.min.js"></script> 
+<script>
+    // 主内容区域的Lenis实例
+    const lenis = new Lenis({
+        wrapper: document.querySelector('.main-content'), // 指定主内容区为滚动容器
+        smoothWheel: true,
+        duration: 0.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        autoResize: true
+    });
+
+    // 文章详情页的Lenis实例
+    const articleLenis = new Lenis({
+        wrapper: document.querySelector('.article-detail-page'), // 文章详情页滚动容器
+        smoothWheel: true,
+        duration: 0.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        autoResize: true
+    });
+    const articleTocLenis = new Lenis({
+        wrapper: document.querySelector('.article-toc'), // 文章详情页滚动容器
+        smoothWheel: true,
+        duration: 0.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        autoResize: true
+    });
+
+    function raf(time) {
+        lenis.raf(time);
+        articleLenis.raf(time);
+        articleTocLenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+</script>
+<script src="fancybox.umd.js"></script>
+<link
+  rel="stylesheet"
+  href="fancybox.css"
+/>
 
 </body>
 </html>
