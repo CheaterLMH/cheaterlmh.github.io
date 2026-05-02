@@ -1,0 +1,111 @@
+{
+  "showcase": [
+    {
+      "title": "Code",
+      "desc": "",
+      "tag": "engineering"
+    },
+    {
+      "title": "Design",
+      "desc": "",
+      "tag": "aesthetic"
+    },
+    {
+      "title": "Write",
+      "desc": "",
+      "tag": "expression"
+    },
+    {
+      "title": "Think",
+      "desc": "",
+      "tag": "philosophy"
+    },
+    {
+      "title": "Build",
+      "desc": "",
+      "tag": "craft"
+    }
+  ],
+  "bento": [
+    {
+      "title": "Frontend",
+      "desc": "React · TypeScript · Tailwind CSS",
+      "span": "col-2",
+      "icon": "⟨/⟩"
+    },
+    {
+      "title": "Minecraft",
+      "desc": "mmc nodebuff MasterⅢ",
+      "span": "col-1",
+      "icon": "{}"
+    },
+    {
+      "title": "EOP",
+      "desc": "i play music for my soul",
+      "span": "col-1",
+      "icon": "✦"
+    },
+    {
+      "title": "Writing",
+      "desc": "是你吻开笔墨，染我眼角朱泪，演离合相遇悲喜为谁？",
+      "span": "col-2",
+      "icon": "✎"
+    }
+  ],
+  "marqueeA": [
+    "lyrimh",
+    "Code",
+    "Jewdah",
+    "Anticopy-paste",
+    "Stimpy",
+    "Anticopy-paste",
+    "potpvp"
+  ],
+  "marqueeB": [
+    "弱智",
+    "幻想时间",
+    "嗯对",
+    "杏仁脑",
+    "无人在意"
+  ],
+  "stats": [
+    {
+      "value": 1200,
+      "suffix": "+",
+      "label": "小时coding"
+    },
+    {
+      "value": 2,
+      "suffix": "+",
+      "label": "Projects"
+    },
+    {
+      "value": 4,
+      "suffix": "",
+      "label": "Years running"
+    },
+    {
+      "value": 99,
+      "suffix": "%",
+      "label": "L0ve"
+    }
+  ],
+  "bigWords": [
+    {
+      "text": "MISSSSSS",
+      "sub": "他们迂回误会"
+    },
+    {
+      "text": "OWNING",
+      "sub": "我却只有你只配"
+    },
+    {
+      "text": "BEYOND",
+      "sub": "问世间哪有更完美"
+    }
+  ],
+  "quote": {
+    "text": "愿谁记得谁，最好的年岁",
+    "author": "LMHZSZNB"
+  }
+}
